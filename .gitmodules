@@ -1,0 +1,9 @@
+[submodule "deps/bgfx.cmake"]
+	path = deps/bgfx.cmake
+	url = https://github.com/bkaradzic/bgfx.cmake
+[submodule "deps/GameNetworkingSockets"]
+	path = deps/GameNetworkingSockets
+	url = https://github.com/ValveSoftware/GameNetworkingSockets
+[submodule "deps/assimp"]
+	path = deps/assimp
+	url = https://github.com/assimp/assimp

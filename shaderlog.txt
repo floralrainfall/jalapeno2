@@ -1,0 +1,136 @@
+===========> UTILITY: compiling normal shaders <===========
+===========> PROGRAM: compiling textured <===========
+===========> COMPILE: textured vertex (v_textured.sc) <===========
+===========> output == v_textured <===========
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2732): BX depends: 0
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2733): BX preprocessOnly: 0
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2734): BX includeDir: ./shader
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_model (type 4, num 32)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_modelViewProj (type 4, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_model, vec4, 32, 0, 128
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_modelViewProj, vec4, 1, 0, 4
+===========> COMPILE: returned 0 <===========
+===========> COMPILE: textured fragment (f_textured.sc) <===========
+===========> output == f_textured <===========
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2732): BX depends: 0
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2733): BX preprocessOnly: 0
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2734): BX includeDir: ./shader
+===========> COMPILE: returned 0 <===========
+===========> PROGRAM: compiling simple <===========
+===========> COMPILE: simple vertex (v_simple.sc) <===========
+===========> output == v_simple <===========
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2732): BX depends: 0
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2733): BX preprocessOnly: 0
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2734): BX includeDir: ./shader
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_model (type 4, num 32)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_modelViewProj (type 4, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_model, vec4, 32, 0, 128
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_modelViewProj, vec4, 1, 0, 4
+===========> COMPILE: returned 0 <===========
+===========> COMPILE: simple fragment (f_simple.sc) <===========
+===========> output == f_simple <===========
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2732): BX depends: 0
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2733): BX preprocessOnly: 0
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2734): BX includeDir: ./shader
+===========> COMPILE: returned 0 <===========
+===========> PROGRAM: compiling snapshot <===========
+===========> COMPILE: snapshot vertex (v_snapshot.sc) <===========
+===========> output == v_snapshot <===========
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2732): BX depends: 0
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2733): BX preprocessOnly: 0
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2734): BX includeDir: ./shader
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_model (type 4, num 32)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_modelViewProj (type 4, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_model, vec4, 32, 0, 128
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_modelViewProj, vec4, 1, 0, 4
+===========> COMPILE: returned 0 <===========
+===========> COMPILE: snapshot fragment (f_snapshot.sc) <===========
+===========> output == f_snapshot <===========
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2732): BX depends: 0
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2733): BX preprocessOnly: 0
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2734): BX includeDir: ./shader
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_worldlight_direction (type 2, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_worldlight_ambient (type 2, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_worldlight_diffuse (type 2, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_worldlight_specular (type 2, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_camera_viewpos (type 2, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_worldlight_direction, (null), 1, 0, 1
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_worldlight_ambient, (null), 1, 0, 1
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_worldlight_diffuse, (null), 1, 0, 1
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_worldlight_specular, (null), 1, 0, 1
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_camera_viewpos, (null), 1, 0, 1
+===========> COMPILE: returned 0 <===========
+===========> PROGRAM: compiling bspmap <===========
+===========> COMPILE: bspmap vertex (v_bspmap.sc) <===========
+===========> output == v_bspmap <===========
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2732): BX depends: 0
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2733): BX preprocessOnly: 0
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2734): BX includeDir: ./shader
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_modelViewProj (type 4, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_modelViewProj, vec4, 1, 0, 4
+===========> COMPILE: returned 0 <===========
+===========> COMPILE: bspmap fragment (f_bspmap.sc) <===========
+===========> output == f_bspmap <===========
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2732): BX depends: 0
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2733): BX preprocessOnly: 0
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2734): BX includeDir: ./shader
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_worldlight_direction (type 2, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_worldlight_ambient (type 2, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_worldlight_diffuse (type 2, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_worldlight_specular (type 2, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_camera_viewpos (type 2, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_fog_color (type 2, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_fog_settings (type 2, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: texture0 (type 0, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: texture1 (type 0, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_worldlight_direction, (null), 1, 0, 1
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_worldlight_ambient, (null), 1, 0, 1
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_worldlight_diffuse, (null), 1, 0, 1
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_worldlight_specular, (null), 1, 0, 1
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_camera_viewpos, (null), 1, 0, 1
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_fog_color, (null), 1, 0, 1
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_fog_settings, (null), 1, 0, 1
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX texture0, int, 1, 0, 1
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX texture1, int, 1, 0, 1
+===========> COMPILE: returned 0 <===========
+===========> UTILITY: compiling custom shaders <===========
+===========> PROGRAM: compiling (p) bspmap <===========
+===========> COMPILE: skinned vertex (v_skinned.sc) <===========
+===========> output == v_skinned <===========
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2732): BX depends: 0
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2733): BX preprocessOnly: 0
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2734): BX includeDir: ./shader
+Unable to open file 'data/shader/v_skinned.sc'.
+Failed to build shader.
+===========> COMPILE: returned 1 <===========
+===========> PROGRAM: compiling (p) bspmap <===========
+===========> COMPILE: textured fragment (f_textured.sc) <===========
+===========> output == f_skinned <===========
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2732): BX depends: 0
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2733): BX preprocessOnly: 0
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2734): BX includeDir: ./shader
+===========> COMPILE: returned 0 <===========
+===========> PROGRAM: compiling (p) bspmap <===========
+===========> COMPILE: simple vertex (v_simple.sc) <===========
+===========> output == v_quick <===========
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2732): BX depends: 0
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2733): BX preprocessOnly: 0
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2734): BX includeDir: ./shader
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_model (type 4, num 32)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_modelViewProj (type 4, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_model, vec4, 32, 0, 128
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_modelViewProj, vec4, 1, 0, 4
+===========> COMPILE: returned 0 <===========
+===========> PROGRAM: compiling (p) bspmap <===========
+===========> COMPILE: quick fragment (f_quick.sc) <===========
+===========> output == f_quick <===========
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2732): BX depends: 0
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2733): BX preprocessOnly: 0
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2734): BX includeDir: ./shader
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_camera_viewpos (type 2, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_fog_color (type 2, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_fog_settings (type 2, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_camera_viewpos, (null), 1, 0, 1
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_fog_color, (null), 1, 0, 1
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_fog_settings, (null), 1, 0, 1
+===========> COMPILE: returned 0 <===========
