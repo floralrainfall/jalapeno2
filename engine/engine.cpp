@@ -141,7 +141,6 @@ int main(int argc, char** argv)
         // BX_PLATFORM_EMSCRIPTEN
 
         initialize_tasks.wait();
-        engine_app->PreLoad(Engine::LT_TEXTURE, "bad_texture.png");
         engine_app->input_manager->AddSInput({.name = "Vertical", 
             .positiveSource = {.mode = Input::IM_KEYBOARD, .data = (void*)SDLK_w}, 
             .negativeSource = {.mode = Input::IM_KEYBOARD, .data = (void*)SDLK_s}});

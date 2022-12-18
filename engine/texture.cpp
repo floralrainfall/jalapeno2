@@ -18,6 +18,8 @@ Data::TextureManager::TextureManager()
     engine_app->Logf("TextureManager: max texture handles = %i", maxTextures);
 
     PrecacheLoadTexture("brand.png");
+    PrecacheLoadTexture("bad_texture.png");
+    unknown_texture = GetTexture("bad_texture.png");
 }
 
 void Data::TextureManager::SetTextureUniform(int stage, int i, Texture* texture)
@@ -87,7 +89,7 @@ void Data::TextureManager::PrecacheLoadTexture(const char* name, bgfx::TextureHa
     textures.push_back(texture);
 }
 
-Data::Texture* Data::TextureManager::GetTexture(const char* name)
+Data::Texture* Data::TextureManager::GetTexture(const char* name, bool b)
 {
     EASY_FUNCTION();
     for(int i = 0; i < textures.size(); i++)
@@ -97,8 +99,8 @@ Data::Texture* Data::TextureManager::GetTexture(const char* name)
             return textures[i];
         }
     }
-    if(strcmp(name,"bad_texture.png") != 0)
-        return GetTexture("bad_texture.png");
+    if(strcmp(name,"bad_texture.png") != 0 && b)
+        return unknown_texture;
     else
         return nullptr;
 }

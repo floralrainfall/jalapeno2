@@ -8,8 +8,17 @@
 EoA::MapNode::MapNode(Scene::SceneNode* parent) : Scene::SceneNode(parent)
 {
     generated = false;
+    for(int i = 0; i < MAP_WIDTH; i++)
+    {
+        for(int j = 0; j < MAP_HEIGHT; j++)
+        {
+            map[i][j].height = 0.f;
+            map[i][j].tile = WATER;
+        }
+    }
     GenerateMapData();
     GenerateMap();
+    seed = 0;
 }
 
 void EoA::MapNode::CalcVtxNormal(int a, int b, int c)
@@ -35,8 +44,11 @@ void EoA::MapNode::GenerateMapData()
             float fy = (float)j;
             perlin_noise_seed = seed;
             d.height = perlin2d(fx/32.f,fy/32.f,4,4)-0.5f;
+            glm::vec2 center = glm::vec2(MAP_WIDTH/2,MAP_HEIGHT/2);
+            glm::vec2 position = glm::vec2(fx,fy);
+            d.height *= std::cos(glm::distance(center,position)/64.f * M_PIf);
             d.tile = WATER;
-            if(d.height < 0.f)
+            if(d.height <= 0.f)
             {
                 d.tile = WATER;
                 d.height = 0.f;
@@ -52,7 +64,7 @@ void EoA::MapNode::GenerateMapData()
             else
             {
                 perlin_noise_seed = seed + 1;
-                float xtra_biome_sel = perlin2d(fx,fy,4,4);
+                float xtra_biome_sel = perlin2d(fx/32.f,fy/32.f,4,4);
                 
                 if(xtra_biome_sel < 0.5f)
                 {
@@ -88,6 +100,8 @@ glm::vec3 EoA::MapNode::GetTileColor(MapTile t, float h)
             v.x = 0;
             v.y = 0;
             v.z = 127;
+            heightfx = true;
+            h += 0.5f;
             break;
         case MapTile::GRASS:
             v.x = 0;
@@ -154,15 +168,14 @@ void EoA::MapNode::GenerateMap()
             float f_py = (y_pos)/MAP_HEIGHT*2.f;
 
             float height = data.height * 10.f;
-
-            v.normal = glm::vec3(0.f, 1.f, 0.f);
-            v.vertex = glm::vec3(-MAP_WIDTH/2.f + x_pos, height, -MAP_HEIGHT/2.f + y_pos);
-
             glm::vec3 colo = GetTileColor(data.tile, height);
 
             v.r = colo.x;
             v.g = colo.y;
             v.b = colo.z;
+
+            v.normal = glm::vec3(0.f, 1.f, 0.f);
+            v.vertex = glm::vec3(-MAP_WIDTH/2.f + x_pos, height, -MAP_HEIGHT/2.f + y_pos);
 
             vertices.push_back(v);
 

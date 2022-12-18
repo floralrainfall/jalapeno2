@@ -244,7 +244,7 @@ void UI::IMDrawDebugMenu()
                         for(int i = 0; i < engine_app->texture_manager->textures.size(); i++)
                         {
                             Data::Texture* texture = engine_app->texture_manager->textures.at(i);
-                            ImGui::Text("%ix%i", texture->width, texture->height);
+                            ImGui::Text("%ix%i %s", texture->width, texture->height, texture->name);
                             ImGui::Image((ImTextureID)texture->texture.idx, ImVec2(std::min(texture->width,384), std::min(texture->height,384)));
                         }
                         ImGui::EndChild();

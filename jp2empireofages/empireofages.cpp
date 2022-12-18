@@ -15,6 +15,7 @@ public:
         IO::FileSystem::AddDataPath({.path = "eoa"});
 
         PreLoad(Engine::LT_TEXTURE, "ui/ui_assets.png");
+        PreLoad(Engine::LT_TEXTURE, "ui/ui_stingers.png");
         PreLoad(Engine::LT_MESH, "mesh_construction.gltf");
         PreLoad(Engine::LT_MESH, "mesh_city.gltf");
 
@@ -66,11 +67,11 @@ public:
                 glm::vec3 dc = map->GetTileColor(d.tile, d.height * 10.f);
                 ImVec2 b = ImVec2(32+wpos.x+(tile_width*i),32+wpos.y+(tile_height*j));
                 ImVec2 e = ImVec2(32+wpos.x+(tile_width*i)+tile_width,32+wpos.y+(tile_height*j)+tile_height);
-                ImColor c(dc.x, dc.y, dc.z);
+                ImColor c(dc.x/255.f, dc.y/255.f, dc.z/255.f);
 
-                c.Value.x *= d.height;
-                c.Value.y *= d.height;
-                c.Value.z *= d.height;
+                //c.Value.x *= d.height;
+                //c.Value.y *= d.height;
+                //c.Value.z *= d.height;
                 mapDrawList->AddRectFilled(b,e,c);
                 //mapDrawList->AddRect(b,e,0xffffffff);
                 //snprintf(txt,64,"%.02f",d.height);

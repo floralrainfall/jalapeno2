@@ -25,6 +25,7 @@ namespace Data
     {
         bgfx::UniformHandle textureHandles[7];
     public:
+        Texture* unknown_texture;
         int maxTextures;
         std::vector<Texture*> textures;
         TextureManager();
@@ -32,7 +33,7 @@ namespace Data
         void PrecacheLoadTexture(const char* name, void* data, int data_length);
         void PrecacheLoadTexture(const char* name, bgfx::TextureHandle handle, int width, int height);
         void SetTextureUniform(int stage, int i, Texture* texture);
-        Texture* GetTexture(const char* name);
+        Texture* GetTexture(const char* name, bool b = true);
     };
 }
 

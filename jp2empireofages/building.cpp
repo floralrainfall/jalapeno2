@@ -8,7 +8,7 @@ EoA::BuildingNode::BuildingNode(MapNode* map, Scene::SceneNode* parent) :
     this->map = map;
 
     building_progress = 0;
-    building_next = 1000;
+    building_next = 100;
     building_currently = true;
 
     type = BT_ConstructionSite;

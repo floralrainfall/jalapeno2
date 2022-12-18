@@ -69,22 +69,21 @@ void Data::Mesh::RenderSnapshot()
         }
     }
 
-    glm::vec3 cameraPos = glm::vec3(bbox.width, 0.f, bbox.depth);  
+    glm::vec3 cameraPos = glm::vec3(bbox.width * 2.f, 0.f, bbox.depth * 2.f);  
     glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-    bgfx::setUniform(engine_app->camera.u_camera_position, &cameraPos);
 
     glm::mat4 view;
     view = glm::lookAt(cameraPos, cameraTarget, glm::vec3(0.0f, 1.0f, 0.0f));
     glm::mat4 proj;
     proj = glm::perspective(45.f, 1.f, 100.f, 0.1f);
     glm::mat4 model;
-    model = glm::mat4(1.f);
-    model = glm::translate(model, glm::vec3(0.0f,0.0f,0.0f));
+    model = glm::translate(glm::vec3(0.0f,0.0f,0.0f));
     bgfx::setViewFrameBuffer(1, screenshotFramebuffer);
     bgfx::setViewClear(1, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH,
         0x000000ff, 1.0f, 0);
     bgfx::setViewRect(1, 0, 0, GAME_FIXED_WIDTH/2, GAME_FIXED_HEIGHT/2);
     screenshotLighting->Update(); // use values in screenshot lighting
+    bgfx::setUniform(engine_app->camera.u_camera_position, &cameraPos);
     bgfx::touch(1);
 
     for(int i = 0; i < parts->size(); i++)
@@ -242,32 +241,35 @@ std::vector<Data::Texture*> Data::Mesh::LoadMaterialTextures(aiMaterial *materia
 {
     EASY_FUNCTION();
     std::vector<Texture*> textures;
+    engine_app->Logf("Mesh: %i textures to load", material->GetTextureCount(type));
     for(unsigned int i = 0; i < material->GetTextureCount(type); i++)
     {
         aiString str;
         material->GetTexture(type, i, &str);
         char texName2[512];
-        snprintf(texName2, 512, "%s_%s_%s", name, str.C_Str(), file);      
-        if(!engine_app->texture_manager->GetTexture(texName2))
+        snprintf(texName2, 512, "%s_%s_%s", name, str.C_Str(), file);    
+        engine_app->Logf("Mesh: getting tex %s", texName2);  
+        if(!engine_app->texture_manager->GetTexture(texName2, false))
         {
             if(str.data[0] == '*')
             {
                 const aiTexture* tex = scene->GetEmbeddedTexture(str.C_Str());
+                engine_app->Logf("Mesh: loading tex data %s", texName2);
                 engine_app->texture_manager->PrecacheLoadTexture(texName2, tex->pcData, tex->mWidth);      
                 textures.push_back(engine_app->texture_manager->GetTexture(texName2));
             }
             else
             {
-                Texture* tex = engine_app->texture_manager->GetTexture(str.C_Str());
+                Texture* tex = engine_app->texture_manager->GetTexture(str.C_Str(), false);
                 if(!tex)
                 {
+                    engine_app->Logf("Mesh: loading tex file %s", str.C_Str());
                     engine_app->PreLoad(Engine::LT_TEXTURE, str.C_Str());
                 }
-                tex = engine_app->texture_manager->GetTexture(str.C_Str());
-                if(!tex)
+                tex = engine_app->texture_manager->GetTexture(str.C_Str(), true);
+                if(tex != engine_app->texture_manager->unknown_texture)
                 {
                     engine_app->Logf("Mesh: cant load material textures for %s",str.C_Str());
-                    continue;
                 }
                 textures.push_back(tex);
             }
