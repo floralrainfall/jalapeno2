@@ -21,5 +21,4 @@ template<typename T, typename U> constexpr size_t offset_of(U T::*member)
     return (char*)&((T*)nullptr->*member) - (char*)nullptr;
 }
 
-
 #endif

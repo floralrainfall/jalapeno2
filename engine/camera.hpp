@@ -10,9 +10,17 @@ enum CameraMode
     CM_FREE,
 };
 
+enum CameraProjection
+{
+    CP_MANUAL,
+    CP_PERSPECTIVE,
+    CP_ORTHOGRAPHIC,
+};
+
 struct Camera
 {
     CameraMode mode;
+    CameraProjection projection;
 
     glm::mat4 proj;
     glm::vec3 position;
@@ -31,6 +39,23 @@ struct Camera
 
     float pitch;
     float yaw;
+
+    float fov;
+
+    struct
+    {
+        float near;
+        float far;
+        float fov;
+    } perspective_settings;
+
+    struct
+    {
+        float top;
+        float bottom;
+        float left;
+        float right;
+    } orthographic_settings;
 
     void Init();
     Camera();

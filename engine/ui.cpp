@@ -233,6 +233,8 @@ void UI::IMDrawDebugMenu()
                         {
                             Data::Mesh* mesh = engine_app->mesh_manager->meshes.at(i);
                             ImGui::Text("Mesh: %s", mesh->file);
+                            ImGui::Text("BBox: %f, %f, %f - %f, %f, %f",    mesh->bbox.width, mesh->bbox.height, mesh->bbox.depth,
+                                                                            mesh->bbox.width2, mesh->bbox.height2, mesh->bbox.depth2);
                             ImGui::Image((ImTextureID)mesh->snapshotHandle.idx, ImVec2(128, 128));
                         }
                         ImGui::EndChild();

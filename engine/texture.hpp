@@ -16,7 +16,8 @@ namespace Data
         int sprite_width;
         int sprite_height;
 
-        glm::vec2 GetSpriteUVs(int id);
+        glm::vec4 GetSpriteUVs(int id);
+        glm::vec4 GetSpriteUVs(int x, int y);
 
         char* name;
     };

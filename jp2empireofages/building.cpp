@@ -27,27 +27,45 @@ void EoA::BuildingNode::Update()
 {
     MapTileData d = map->GetTileData(map_x, map_y);
     transform.pos.x = -MAP_WIDTH/2 + map_x;
-    transform.pos.y = d.height * 10.f + 1.f;
+    transform.pos.y = d.height * 100.f + 1.f;
     transform.pos.z = -MAP_HEIGHT/2 + map_y;
 
     UpdateBuildingStage();
 }
 
-void EoA::BuildingNode::UpdateBuildingStage()
+void EoA::BuildingNode::DbgWidgets()
 {
-    if(building_progress != building_next)
+    ImGui::InputInt("Building Type", (int*)&type);
+    ImGui::InputInt("Building Next Type", (int*)&next_type);
+    ImGui::Checkbox("Currently Building", &building_currently);
+    ImGui::BeginDisabled(!building_currently);
+    ImGui::SliderInt("Building Progress", &building_progress, 0, building_next);
+    ImGui::EndDisabled();
+    ImGui::InputInt("Building Next Ticks", &building_next);
+    ImGui::InputInt2("Tile Position", &map_x);
+}
+
+void EoA::BuildingNode::UpdateBuildingStage(bool force)
+{
+    if(!force)
     {
-        if(building_currently)
+        if(building_progress != building_next)
         {
-            building_next++;
+            if(building_currently)
+            {
+                building_progress++;
+            }
+            return;
         }
-        return;
     }
 
     switch(next_type)
     {
         case BT_City:
             mesh = engine_app->mesh_manager->GetMesh("mesh_city.gltf");
+            building_currently = false;
+            type = next_type;
+            next_type = BT_Unknown;
             break;
         case BT_Unknown:
             building_currently = false;
@@ -58,6 +76,5 @@ void EoA::BuildingNode::UpdateBuildingStage()
             next_type = BT_Unknown;
             break;
     }
-    type = next_type;
     building_progress = 0;
 }

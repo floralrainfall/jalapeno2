@@ -17,8 +17,11 @@ namespace Data
     struct MeshBoundingBox
     {
         float width; // x
+        float width2; // -x
         float height; // y
+        float height2; // -y
         float depth; // z
+        float depth2; // -z
     };
 
     struct PosColorVertex

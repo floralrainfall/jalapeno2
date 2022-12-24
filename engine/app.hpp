@@ -6,6 +6,7 @@
 #include "scene.hpp"
 #include "camera.hpp"
 #include "texture.hpp"
+#include "sound.hpp"
 #include "input.hpp"
 #include "gns/gns.hpp"
 #include "filesystem.hpp"
@@ -47,6 +48,7 @@ namespace Engine
             Data::MeshManager* mesh_manager = nullptr;
             Data::ShaderManager* shader_manager = nullptr;
             Data::TextureManager* texture_manager = nullptr;
+            Sound::SoundManager* sound_manager = nullptr;
             Input::InputManager* input_manager = nullptr;
 
             virtual char* GetAppName();

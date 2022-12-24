@@ -114,9 +114,12 @@ void Data::Mesh::ProcessNode(aiNode* node, const aiScene* scene)
         aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
         Part* part = ProcessMesh(mesh, scene);
         parts->push_back(part);
-        bbox.width = std::max(bbox.width,bbox.width);
-        bbox.height = std::max(bbox.height,bbox.height);
-        bbox.depth = std::max(bbox.depth,bbox.depth);
+        bbox.width = std::max(part->bbox.width,bbox.width);
+        bbox.width2 = std::min(part->bbox.width2,bbox.width2);
+        bbox.height = std::max(part->bbox.height,bbox.height);
+        bbox.height2 = std::min(part->bbox.height2,bbox.height2);
+        bbox.depth = std::max(part->bbox.depth,bbox.depth);
+        bbox.depth2 = std::min(part->bbox.depth2,bbox.depth2);
     }
     for(int i = 0; i < node->mNumChildren; i++)
     {
@@ -137,7 +140,7 @@ Data::Part* Data::Mesh::ProcessMesh(aiMesh* mesh, const aiScene *scene)
 
     p->u_normalMatrix = bgfx::createUniform("u_normalmatrix", bgfx::UniformType::Mat3);
 
-    float bbox_w1, bbox_w2, bbox_h1, bbox_h2, bbox_d1, bbox_d2;
+    float bbox_w1, bbox_w2, bbox_h1, bbox_h2, bbox_d1, bbox_d2 = 0.f;
 
     for(int i = 0; i < mesh->mNumVertices; i++)
     {
@@ -199,13 +202,19 @@ Data::Part* Data::Mesh::ProcessMesh(aiMesh* mesh, const aiScene *scene)
     }
     engine_app->Logf("MeshManager: %i bones added", mesh->mNumBones);
 
-    p->bbox.width = bbox_w1 - bbox_w2;
-    p->bbox.height = bbox_h1 - bbox_h2;
-    p->bbox.depth = bbox_d1 - bbox_d2;
+    p->bbox.width = bbox_w1;
+    p->bbox.width2 = bbox_w2;
+    p->bbox.height = bbox_h1;
+    p->bbox.height2 = bbox_h2;
+    p->bbox.depth = bbox_d1;
+    p->bbox.depth2 = bbox_d2;
 
     bbox.width = std::max(p->bbox.width,bbox.width);
+    bbox.width2 = std::min(p->bbox.width2,bbox.width2);
     bbox.height = std::max(p->bbox.height,bbox.height);
+    bbox.height2 = std::min(p->bbox.height2,bbox.height2);
     bbox.depth = std::max(p->bbox.depth,bbox.depth);
+    bbox.depth2 = std::min(p->bbox.depth2,bbox.depth2);
 
     for(int i = 0; i < mesh->mNumFaces; i++)
     {
@@ -296,6 +305,12 @@ void Data::MeshManager::PrecacheLoadMesh(const char* file)
         engine_app->Logf("MeshManager: Precaching %s", file);
         mesh->file = (const char*)malloc(strlen(file)+1);
         strcpy((char*)mesh->file,file);
+        mesh->bbox.width = 0.f;
+        mesh->bbox.width2 = 0.f;
+        mesh->bbox.height = 0.f;
+        mesh->bbox.height2 = 0.f;
+        mesh->bbox.depth = 0.f;
+        mesh->bbox.depth2 = 0.f;
         mesh->ProcessNode(scene->mRootNode, scene);
         mesh->snapshotHandle = bgfx::createTexture2D(bgfx::BackbufferRatio::Half, false, 1, bgfx::TextureFormat::RGBA8, BGFX_TEXTURE_BLIT_DST);
         engine_app->texture_manager->PrecacheLoadTexture(file,mesh->snapshotHandle,512,512);

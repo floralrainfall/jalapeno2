@@ -127,9 +127,17 @@ Failed to build shader.
 /home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2732): BX depends: 0
 /home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2733): BX preprocessOnly: 0
 /home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc.cpp(2734): BX includeDir: ./shader
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_worldlight_direction (type 2, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_worldlight_ambient (type 2, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_worldlight_diffuse (type 2, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_worldlight_specular (type 2, num 1)
 /home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_camera_viewpos (type 2, num 1)
 /home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_fog_color (type 2, num 1)
 /home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(205): BX name: u_fog_settings (type 2, num 1)
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_worldlight_direction, (null), 1, 0, 1
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_worldlight_ambient, (null), 1, 0, 1
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_worldlight_diffuse, (null), 1, 0, 1
+/home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_worldlight_specular, (null), 1, 0, 1
 /home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_camera_viewpos, (null), 1, 0, 1
 /home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_fog_color, (null), 1, 0, 1
 /home/caesium/projects/jalapeno2/deps/bgfx.cmake/bgfx/tools/shaderc/shaderc_glsl.cpp(368): BX u_fog_settings, (null), 1, 0, 1

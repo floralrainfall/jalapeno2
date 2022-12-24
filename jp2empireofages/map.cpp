@@ -4,6 +4,7 @@
 #include "building.hpp"
 #include "perlin.h"
 #include <math.h>
+#include <imgui/imgui.h>
 
 EoA::MapNode::MapNode(Scene::SceneNode* parent) : Scene::SceneNode(parent)
 {
@@ -16,9 +17,18 @@ EoA::MapNode::MapNode(Scene::SceneNode* parent) : Scene::SceneNode(parent)
             map[i][j].tile = WATER;
         }
     }
+    seed = 0;
     GenerateMapData();
     GenerateMap();
-    seed = 0;
+}
+
+EoA::MapNode::~MapNode()
+{    
+    if(generated)
+    {
+        bgfx::destroy(vbh_map);
+        bgfx::destroy(ibh_map);
+    }
 }
 
 void EoA::MapNode::CalcVtxNormal(int a, int b, int c)
@@ -43,21 +53,28 @@ void EoA::MapNode::GenerateMapData()
             float fx = (float)i;
             float fy = (float)j;
             perlin_noise_seed = seed;
-            d.height = perlin2d(fx/32.f,fy/32.f,4,4)-0.5f;
+            d.height = perlin2d(fx/MAP_WIDTH,fy/MAP_HEIGHT,4,4)-0.5f;
             glm::vec2 center = glm::vec2(MAP_WIDTH/2,MAP_HEIGHT/2);
             glm::vec2 position = glm::vec2(fx,fy);
-            d.height *= std::cos(glm::distance(center,position)/64.f * M_PIf);
+            if(glm::distance(center,position) < radial)
+            {
+                d.height *= std::cos(glm::distance(center,position)/radial * M_PI_2f) * radial_bias;
+            }
+            else
+            {
+                d.height = ocean_threshold;
+            }
             d.tile = WATER;
-            if(d.height <= 0.f)
+            if(d.height <= ocean_threshold)
             {
                 d.tile = WATER;
-                d.height = 0.f;
+                d.height = ocean_threshold;
             }
-            else if(d.height < 0.1f)
+            else if(d.height < beach_threshold)
             {
                 d.tile = BEACH;
             }
-            else if(d.height > 0.8f)
+            else if(d.height > mountain_threshold)
             {
                 d.tile = MOUNTAIN;
             }
@@ -66,7 +83,7 @@ void EoA::MapNode::GenerateMapData()
                 perlin_noise_seed = seed + 1;
                 float xtra_biome_sel = perlin2d(fx/32.f,fy/32.f,4,4);
                 
-                if(xtra_biome_sel < 0.5f)
+                if(xtra_biome_sel < forest_threshold)
                 {
                     d.tile = GRASS;
                 }
@@ -82,7 +99,13 @@ void EoA::MapNode::GenerateMapData()
 
 EoA::MapTileData EoA::MapNode::GetTileData(int x, int y)
 {
-    return map[x][y];
+    if(x > 0 || x < MAP_WIDTH)
+        if(y > 0 || y < MAP_HEIGHT)
+            return map[x][y];
+    MapTileData k = MapTileData();
+    k.height = 0.f;
+    k.tile = UNKNOWN;
+    return k;
 }
 
 glm::vec3 EoA::MapNode::GetTileColor(MapTile t, float h)
@@ -167,8 +190,8 @@ void EoA::MapNode::GenerateMap()
             float f_px = (x_pos)/MAP_WIDTH*2.f;
             float f_py = (y_pos)/MAP_HEIGHT*2.f;
 
-            float height = data.height * 10.f;
-            glm::vec3 colo = GetTileColor(data.tile, height);
+            float height = data.height * 100.f;
+            glm::vec3 colo = GetTileColor(data.tile, height / 10.f);
 
             v.r = colo.x;
             v.g = colo.y;
@@ -191,6 +214,7 @@ void EoA::MapNode::GenerateMap()
             {
                 indices.push_back(j + MAP_WIDTH * (i + k));
             }
+            CalcVtxNormal(j + MAP_WIDTH * (i), j + MAP_WIDTH * (i + 1), 0);
         }
     }
 
@@ -226,4 +250,21 @@ void EoA::MapNode::Render()
             bgfx::submit(0, shader->program);
         }
     }
+}
+
+void EoA::MapNode::DbgWidgets()
+{
+    SceneNode::DbgWidgets();
+    if(ImGui::Button("Generate"))
+    {
+        GenerateMapData();
+        GenerateMap();
+    }
+    ImGui::InputInt("Seed", &seed);
+    ImGui::SliderFloat("Ocean Threshold", &ocean_threshold, -1.f, 1.f);
+    ImGui::SliderFloat("Beach Threshold", &beach_threshold, -1.f, 1.f);
+    ImGui::SliderFloat("Mountain Threshold", &mountain_threshold, -1.f, 1.f);
+    ImGui::SliderFloat("Forest Threshold", &forest_threshold, -1.f, 1.f);
+    ImGui::SliderFloat("Radial", &radial, -100.f, 100.f);
+    ImGui::SliderFloat("Radial Bias", &radial_bias, -100.f, 100.f);
 }

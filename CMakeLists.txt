@@ -6,6 +6,7 @@ add_subdirectory(deps/GameNetworkingSockets)
 find_package(SDL2 REQUIRED CONFIG)
 find_package(PkgConfig REQUIRED)
 find_package(easy_profiler CONFIG)
+find_package(OpenAL REQUIRED)
 pkg_check_modules(shaderc REQUIRED)
 project(jalapeno2)
 project(jpbsp)
@@ -54,6 +55,8 @@ add_library(jalapeno2 STATIC
 	engine/save.hpp
 	engine/filesystem.cpp
 	engine/filesystem.hpp
+	engine/sound.cpp
+	engine/sound.hpp
 	engine/stb_image.h
 )
 add_library(jpbsp STATIC
@@ -95,7 +98,7 @@ target_include_directories(jalapeno2 PUBLIC
 	${shaderc_INCLUDE_DIR}
 )
 target_link_libraries(jalapeno2
-	bgfx SDL2 assimp ${shaderc_LIBRARIES} GameNetworkingSockets
+	bgfx SDL2 assimp ${shaderc_LIBRARIES} GameNetworkingSockets ${OPENAL_LIBRARY}
 )
 target_link_libraries(jpbsp
 	jalapeno2

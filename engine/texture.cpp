@@ -5,6 +5,22 @@
 #include <easy/profiler.h>
 #include "filesystem.hpp"
 
+
+#define qd(x,v) (float)(x)/v
+glm::vec4 Data::Texture::GetSpriteUVs(int id)
+{
+    int sprites_x = width/sprite_width;
+    int sprites_y = height/sprite_height;
+    int x = id % sprites_x;
+    int y = (id - x) / sprites_y;
+    return glm::vec4(qd(x*sprite_width,width), qd(y*sprite_height,height), qd(x*sprite_width+sprite_width,width), qd(y*sprite_height+sprite_height,height)); 
+}
+
+glm::vec4 Data::Texture::GetSpriteUVs(int x, int y)
+{
+    return glm::vec4(qd(x*sprite_width,width), qd(y*sprite_height,height), qd(x*sprite_width+sprite_width,width), qd(y*sprite_height+sprite_height,height));
+}
+
 Data::TextureManager::TextureManager()
 {
     EASY_FUNCTION();

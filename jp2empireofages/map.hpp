@@ -5,8 +5,8 @@
 #include <shader.hpp>
 #include <bgfx/bgfx.h>
 
-#define MAP_WIDTH 64
-#define MAP_HEIGHT 64
+#define MAP_WIDTH 192
+#define MAP_HEIGHT 192
 
 namespace EoA
 {
@@ -17,6 +17,7 @@ namespace EoA
         FOREST,
         WATER,
         BEACH,    
+        UNKNOWN,
     };
 
     struct MapTileData
@@ -34,6 +35,12 @@ namespace EoA
         void CalcVtxNormal(int a, int b, int c);
     public:
         int seed;
+        float ocean_threshold = 0.05f;
+        float beach_threshold = 0.07f;
+        float mountain_threshold = 0.150f;
+        float forest_threshold = 0.34f;
+        float radial = MAP_HEIGHT/2;
+        float radial_bias = 1.f;
         MapTileData map[MAP_WIDTH][MAP_HEIGHT];
 
         bgfx::VertexBufferHandle vbh_map;
@@ -48,8 +55,10 @@ namespace EoA
         MapTileData GetTileData(int x, int y);
 
         virtual void Render();
+        virtual void DbgWidgets();
 
         MapNode(Scene::SceneNode* parent);
+        ~MapNode();
     };
 };
 

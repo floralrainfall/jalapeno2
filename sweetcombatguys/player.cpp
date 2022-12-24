@@ -93,3 +93,4 @@ void SCG::Player::Update()
     engine_app->camera.pitch = new_pitch;
     engine_app->camera.Update();
 }
+

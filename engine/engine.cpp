@@ -116,6 +116,7 @@ int main(int argc, char** argv)
                 engine_app->texture_manager = new Data::TextureManager();
                 engine_app->shader_manager = new Data::ShaderManager();
                 engine_app->mesh_manager = new Data::MeshManager();
+                engine_app->sound_manager = new Sound::SoundManager();
                 engine_app->input_manager = new Input::InputManager();
                 engine_app->root_node = new Scene::SceneNode();});
         bgfx::reset(GAME_FIXED_WIDTH, GAME_FIXED_HEIGHT, BGFX_RESET_VSYNC | BGFX_RESET_MSAA_X16);
@@ -201,28 +202,29 @@ int main(int argc, char** argv)
             if(!engine_app->mesh_manager->RenderQueue())
             {
                 EASY_BLOCK("Render Loop");
-                auto tick_tasks = std::async(std::launch::async,
-                    []() {
-                        EASY_THREAD("Worker: Tick");
-                        engine_app->PreTick();
-                        if(engine_app->netcontext_s)
-                            engine_app->netcontext_s->Tick();
-                        if(engine_app->netcontext)
-                            engine_app->netcontext->Tick();
-                        if(!engine_app->pauseGame)
-                            engine_app->root_node->Update();
-                        engine_app->Tick();
-                    });
-                // pre tick
+                //auto tick_tasks = std::async(std::launch::async,
+                //    []() {
+                //    });
 
+                // pre tick
+                engine_app->PreTick();
                 engine_app->PreRender();
-                tick_tasks.wait();
+                if(engine_app->netcontext_s)
+                    engine_app->netcontext_s->Tick();
+                if(engine_app->netcontext)
+                    engine_app->netcontext->Tick();
+                if(!engine_app->pauseGame)
+                    engine_app->root_node->Update();
+                engine_app->Tick();
+                
+                //tick_tasks.wait();
                 SDL_SetRelativeMouseMode((SDL_bool)(!engine_app->pauseGame && engine_app->focusMode));
                 engine_app->root_node->RUpdate();
                 engine_app->camera.Update();
                 glm::mat4 view = engine_app->camera.GetViewMatrix();
                 bgfx::setMarker("Render scene graph");
                 bgfx::setViewTransform(0, (float*)&view, (float*)&engine_app->camera.proj);
+                engine_app->sound_manager->Update();
                 engine_app->root_node->Render();
                 // pre render
                 Debug::Console::Render();
@@ -316,6 +318,7 @@ int main(int argc, char** argv)
             Network::SteamDatagram::ShutdownSteamDatagramConnectionSockets();
         }
 
+        delete engine_app->sound_manager;
         bgfx::shutdown();
     }
     printf("goodbye... saved %i blocks\n", profiler::dumpBlocksToFile("test_profile.prof"));
