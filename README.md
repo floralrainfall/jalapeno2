@@ -5,7 +5,7 @@ In this repository you will find:
 
 1. `engine`, the directory that contains the Jalapeno2 engine source code.
 2. `jp2empireofages`, a real-time-strategy game
-3. `sweetcombatguys`, a first person shooter game
+3. `sweetcombatguys`, a first person shooter game. This game requires `pak0.pk3` from Quake 3 to be extracted in `data/scg/quake` in order for backward-compatibility with Quake 3 map textures, and for SCG maps that use Quake 3 assets.
 4. `test`, a testing executable for the Jalapeno2 engine
 5. `totalevo`, an evolution simulator
 6. `xtralibs/jpbsp`, a Quake 3 BSP loading library for Jalapeno2
