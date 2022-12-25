@@ -13,13 +13,15 @@ In this repository you will find:
 ## Compiling
 
 1. Clone the repository: `git clone https://github.com/floralrainfall/jalapeno2`
-2. Run cmake in a build dir, e.g: `mkdir build &&  cd build && cmake ..`
-3. Build (`make` or `ninja` or `msbuild`, depends on what you used with cmake)
-4. Run the compile shaders script, for example on Linux you would run `./compileShaders-linux.sh`
-5. You can now run the game!
+2. Make sure to update the submodules: `git submodule update --init`
+3. Run cmake in a build dir, e.g: `mkdir build &&  cd build && cmake ..`
+4. Build (`make` or `ninja` or `msbuild`, depends on what you used with cmake)
+5. Run the compile shaders script, for example on Linux you would run `./compileShaders-linux.sh`
+6. You can now run the game!
 
 ### Simple script to automate this (Linux)
     git clone https://github.com/floralrainfall/jalapeno2
+    git submodule update --init
     mkdir build
     cd build
     cmake -G Ninja ..
