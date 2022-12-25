@@ -21,6 +21,7 @@ In this repository you will find:
 
 ### Simple script to automate this (Linux)
     git clone https://github.com/floralrainfall/jalapeno2
+    cd jalapeno2
     git submodule update --init
     mkdir build
     cd build
