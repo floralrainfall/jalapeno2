@@ -20,6 +20,16 @@ namespace EoA
         UNKNOWN,
     };
 
+    enum WeatherState
+    {
+        WS_Rainy,
+        WS_Sunny,
+        WS_Cloudy,
+        WS_Clouds,
+        WS_Foggy,
+        WS_Thunder
+    };
+
     struct MapTileData
     {
         MapTile tile;
@@ -41,6 +51,13 @@ namespace EoA
         float forest_threshold = 0.34f;
         float radial = MAP_HEIGHT/2;
         float radial_bias = 1.f;
+
+        float world_temperature_diff = 0.f;
+        float world_co2_ppm = 280.f;
+        float world_ocean_level = 0.f;
+
+        WeatherState weather;
+
         MapTileData map[MAP_WIDTH][MAP_HEIGHT];
 
         bgfx::VertexBufferHandle vbh_map;
@@ -49,6 +66,7 @@ namespace EoA
 
         void GenerateMap();
         void GenerateMapData();
+        void ImGuiDrawMap();
 
         glm::vec3 GetTileColor(MapTile t, float h = 1.f);
 

@@ -75,14 +75,14 @@ void Data::TextureManager::PrecacheLoadTexture(const char* name, void* data, int
     int resx;
     int resy;
     int comp;
-    stbi_uc* data_s = stbi_load_from_memory((const stbi_uc*)data, data_length, &resx, &resy, &comp, 4);
+    stbi_uc* data_s = stbi_load_from_memory((const stbi_uc*)data, data_length, &resx, &resy, &comp, STBI_rgb_alpha);
     if(data_s)
     {
         engine_app->Logf("TextureManager: Loaded texture '%s' %p, %ix%i %i", name, data, resx, resy, comp);
         Texture* texture = new Texture();
         texture->width = resx;
         texture->height = resy;
-        texture->texture = bgfx::createTexture2D(resx, resy, false, 1, bgfx::TextureFormat::RGBA8, 0, bgfx::copy(data_s, resx * resy * comp));
+        texture->texture = bgfx::createTexture2D(resx, resy, false, 1, bgfx::TextureFormat::RGBA8, 0, bgfx::copy(data_s, resx * resy * 4));
         texture->name = (char*)malloc(strlen(name)+1);
         strcpy(texture->name, name);
         textures.push_back(texture);

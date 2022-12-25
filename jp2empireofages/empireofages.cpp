@@ -5,15 +5,12 @@
 #include <glm/gtx/transform.hpp>
 #include <imgui/imgui.h>
 #include <console.hpp>
+#include <ui.hpp>
 
 class EoAApp : public Engine::App
 {
 public:
     EoA::MapNode* map;
-    EoA::MapNode* bm_map_s;
-    EoA::MapNode* bm_map_n;
-    EoA::MapNode* bm_map_w;
-    EoA::MapNode* bm_map_e;
     EoA::MapNode* wanted_map;
 
     EoA::BuildingNode* selected_node;
@@ -52,7 +49,8 @@ public:
         GAS_Intelligence,
         GAS_Asterix,
         GAS_Unknown,
-        GAS_Defense = GAS_Unknown+4,
+        GAS_RawResources,
+        GAS_Defense = GAS_RawResources+3,
         GAS_Agility,
         GAS_Attack,
         GAS_Shock,
@@ -72,7 +70,16 @@ public:
         GAS_Disassemble,
         GAS_Move,
         GAS_Destroy,
-        GAS_Constructioning
+        GAS_Constructioning,
+        GAS_Co2Emissions,
+        GAS_Temperature,
+        GAS_Rainfall,
+        GAS_Sunny,
+        GAS_Cloudy,
+        GAS_ColdGreyMorning,
+        GAS_Foggy,
+        GAS_Lightning,
+        GAS_Co2
     };
 
     enum { MainMenu, Game, NewGameMenu, BoatMode } game_mode = MainMenu;
@@ -159,6 +166,7 @@ public:
                 }
                 break;
             case NewGameMenu:
+                camera.mode = CM_TARGET;
                 camera.target = glm::vec3(0.f,16.f,0.f);
                 camera.position = glm::vec3(std::sin(frame_counter/50.f)*(MAP_WIDTH/4.f),32.f,std::cos(frame_counter/50.f)*(MAP_HEIGHT/4.f));
                 break;
@@ -167,12 +175,50 @@ public:
 
     virtual void GUIRender()
     {
+        glm::vec4 uv_pos;
+        ImVec2 size = ImVec2(18,18);
         if(game_mode == Game)
         {
+            menu_bar_enabled = false;
+            if(ImGui::BeginMainMenuBar())
+            {
+                if(ImGui::BeginMenu("Game"))
+                {
+                    if(ImGui::MenuItem("Quit"))
+                    {
+                        running = false;
+                    }
+
+                    ImGui::EndMenu();
+                }
+
+                if(ImGui::BeginMenu("Build"))
+                {
+                    ImGui::EndMenu();
+                }
+
+                uv_pos = gen_assets_sheet->GetSpriteUVs((int)GAS_Money);                
+                ImGui::Image((ImTextureID)gen_assets_sheet->texture.idx,size,ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));
+                ImGui::Text(": %i $");
+                uv_pos = gen_assets_sheet->GetSpriteUVs((int)GAS_Goods);                
+                ImGui::Image((ImTextureID)gen_assets_sheet->texture.idx,size,ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));
+                ImGui::Text(": %i kg");
+                uv_pos = gen_assets_sheet->GetSpriteUVs((int)GAS_RawResources);                
+                ImGui::Image((ImTextureID)gen_assets_sheet->texture.idx,size,ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));
+                ImGui::Text(": %i kg");
+                uv_pos = gen_assets_sheet->GetSpriteUVs((int)GAS_Temperature);                
+                ImGui::Image((ImTextureID)gen_assets_sheet->texture.idx,size,ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));
+                ImGui::Text(": %c%.2f degrees centigrade", (map->world_temperature_diff < 0.f)?'-':'+', map->world_temperature_diff);
+                uv_pos = gen_assets_sheet->GetSpriteUVs((int)GAS_Co2);                
+                ImGui::Image((ImTextureID)gen_assets_sheet->texture.idx,size,ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));
+                ImGui::Text(": %.2f ppm", map->world_co2_ppm);
+                uv_pos = gen_assets_sheet->GetSpriteUVs((int)GAS_Rainfall + (int)map->weather);                
+                ImGui::Image((ImTextureID)gen_assets_sheet->texture.idx,size,ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));
+            }
+            ImGui::EndMainMenuBar();
             if(selected_node)
             {
                 ImGui::Begin("Building");
-                glm::vec4 uv_pos;
                 if(selected_node->building_currently)
                 {                  
                     uv_pos = gen_assets_sheet->GetSpriteUVs((int)GAS_Constructioning);                
@@ -193,11 +239,19 @@ public:
                 ImGui::SameLine();
                 ImGui::ImageButton((ImTextureID)gen_assets_sheet->texture.idx,ImVec2(32,32),ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));    
                 ImGui::Separator(); 
+                if(ImGui::Button("Deselect"))
+                {
+                    selected_node = nullptr;
+                }
                 ImGui::End();
             }
+            ImGui::Begin("Map");
+            map->ImGuiDrawMap();
+            ImGui::End();
         }
         else
         {
+            menu_bar_enabled = true;
             switch(game_mode)
             {
                 case BoatMode:
@@ -206,7 +260,7 @@ public:
                     if(ImGui::Button("Go back to Main Menu"))
                     {
                         game_mode = MainMenu;
-                        wanted_map->parent->children.remove(map);
+                        map->parent->children.remove(map);
                         delete map;
                     }
                     ImGui::End();
@@ -220,6 +274,7 @@ public:
                         wanted_map->seed = std::rand() % 1000;
                         wanted_map->GenerateMapData();
                         wanted_map->GenerateMap();
+                        UI::im_aboutmenu_draw = false;
                     }
                     if(ImGui::Button("Quit"))
                         running = false;
@@ -227,32 +282,14 @@ public:
                     break;
                 case NewGameMenu:
                     ImGui::Begin("New Game");    
-                    int tile_width = 1;
-                    int tile_height = 1;        
-                    ImGui::BeginChild("new game child frame", ImVec2(MAP_WIDTH*tile_width,MAP_HEIGHT*tile_height));
-                    ImDrawList* mapDrawList = ImGui::GetWindowDrawList();
-                    ImVec2 wpos = ImGui::GetWindowPos();
-                    //char txt[64];
-                    for(int i = 0; i < MAP_WIDTH; i++)
-                    {
-                        for(int j = 0; j < MAP_HEIGHT; j++)
-                        {
-                            EoA::MapTileData d = wanted_map->GetTileData(i,j);
-                            glm::vec3 dc = wanted_map->GetTileColor(d.tile, d.height * 10.f);
-                            ImVec2 b = ImVec2(wpos.x+(tile_width*i),wpos.y+(tile_height*j));
-                            ImVec2 e = ImVec2(wpos.x+(tile_width*i)+tile_width,wpos.y+(tile_height*j)+tile_height);
-                            ImColor c(dc.x/255.f, dc.y/255.f, dc.z/255.f);
+                    wanted_map->ImGuiDrawMap();
 
-                            //c.Value.x *= d.height;
-                            //c.Value.y *= d.height;
-                            //c.Value.z *= d.height;
-                            mapDrawList->AddRectFilled(b,e,c);
-                            //mapDrawList->AddRect(b,e,0xffffffff);
-                            //snprintf(txt,64,"%.02f",d.height);
-                            //mapDrawList->AddText(b,0xffffffff,txt);
-                        }
+                    if(ImGui::Button("Randomize Seed"))
+                    {
+                        wanted_map->seed = rand() % 10000;
+                        wanted_map->GenerateMapData();
+                        wanted_map->GenerateMap();
                     }
-                    ImGui::EndChild();
 
                     wanted_map->DbgWidgets();
                     

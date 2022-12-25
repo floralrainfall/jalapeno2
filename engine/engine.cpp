@@ -48,6 +48,7 @@ int main(int argc, char** argv)
                             GAME_FIXED_WIDTH,
                             GAME_FIXED_HEIGHT,
                             SDL_WINDOW_SHOWN);
+    srand(12461016);
 
     if(!engine_app)
     {

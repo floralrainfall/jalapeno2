@@ -20,6 +20,14 @@ namespace EoA
         BT_FBaitBroadcast,
     };
 
+    enum BuildingState
+    {
+        BS_Normal,
+        BS_Destroying,
+        BS_Demolish,
+        BS_Upgrading,
+    };
+
     class BuildingNode : public Scene::MeshNode
     {
     public:
@@ -28,6 +36,7 @@ namespace EoA
         bool building_currently;
         BuildingType type;
         BuildingType next_type;
+        BuildingState state;
         MapNode* map;
 
         BuildingNode(MapNode* map, Scene::SceneNode* parent);

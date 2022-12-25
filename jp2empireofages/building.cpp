@@ -20,6 +20,8 @@ EoA::BuildingNode::BuildingNode(MapNode* map, Scene::SceneNode* parent) :
     map_x = MAP_WIDTH/2;
     map_y = MAP_HEIGHT/2;
 
+    state = BS_Normal;
+
     UpdateBuildingStage();
 }
 
@@ -47,6 +49,9 @@ void EoA::BuildingNode::DbgWidgets()
 
 void EoA::BuildingNode::UpdateBuildingStage(bool force)
 {
+    if(state == BS_Demolish)
+        return;
+
     if(!force)
     {
         if(building_progress != building_next)
@@ -54,9 +59,16 @@ void EoA::BuildingNode::UpdateBuildingStage(bool force)
             if(building_currently)
             {
                 building_progress++;
+                state = BS_Upgrading;
             }
             return;
         }
+    }
+
+    if(state == BS_Destroying)
+    {
+        state = BS_Demolish;
+        return;
     }
 
     switch(next_type)
@@ -77,4 +89,5 @@ void EoA::BuildingNode::UpdateBuildingStage(bool force)
             break;
     }
     building_progress = 0;
+    state = BS_Normal;
 }

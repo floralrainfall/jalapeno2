@@ -45,6 +45,8 @@ void EoA::MapNode::CalcVtxNormal(int a, int b, int c)
 
 void EoA::MapNode::GenerateMapData()
 {
+    world_ocean_level = ocean_threshold;
+    weather = WS_Sunny;
     for(int i = 0; i < MAP_WIDTH; i++)
     {
         for(int j = 0; j < MAP_HEIGHT; j++)
@@ -101,7 +103,11 @@ EoA::MapTileData EoA::MapNode::GetTileData(int x, int y)
 {
     if(x > 0 || x < MAP_WIDTH)
         if(y > 0 || y < MAP_HEIGHT)
+        {
+            if(world_ocean_level >= map[x][y].height)
+                map[x][y].tile = WATER;
             return map[x][y];
+        }
     MapTileData k = MapTileData();
     k.height = 0.f;
     k.tile = UNKNOWN;
@@ -198,7 +204,7 @@ void EoA::MapNode::GenerateMap()
             v.b = colo.z;
 
             v.normal = glm::vec3(0.f, 1.f, 0.f);
-            v.vertex = glm::vec3(-MAP_WIDTH/2.f + x_pos, height, -MAP_HEIGHT/2.f + y_pos);
+            v.vertex = glm::vec3(-MAP_WIDTH/2.f + x_pos, std::max(world_ocean_level * 100.f, height), -MAP_HEIGHT/2.f + y_pos);
 
             vertices.push_back(v);
 
@@ -267,4 +273,34 @@ void EoA::MapNode::DbgWidgets()
     ImGui::SliderFloat("Forest Threshold", &forest_threshold, -1.f, 1.f);
     ImGui::SliderFloat("Radial", &radial, -100.f, 100.f);
     ImGui::SliderFloat("Radial Bias", &radial_bias, -100.f, 100.f);
+}
+
+void EoA::MapNode::ImGuiDrawMap()
+{
+    int tile_width = 1;
+    int tile_height = 1;        
+    ImGui::BeginChild("new game child frame", ImVec2(MAP_WIDTH*tile_width,MAP_HEIGHT*tile_height));
+    ImDrawList* mapDrawList = ImGui::GetWindowDrawList();
+    ImVec2 wpos = ImGui::GetWindowPos();
+    //char txt[64];
+    for(int i = 0; i < MAP_WIDTH; i++)
+    {
+        for(int j = 0; j < MAP_HEIGHT; j++)
+        {
+            EoA::MapTileData d = GetTileData(i,j);
+            glm::vec3 dc = GetTileColor(d.tile, d.height * 10.f);
+            ImVec2 b = ImVec2(wpos.x+(tile_width*i),wpos.y+(tile_height*j));
+            ImVec2 e = ImVec2(wpos.x+(tile_width*i)+tile_width,wpos.y+(tile_height*j)+tile_height);
+            ImColor c(dc.x/255.f, dc.y/255.f, dc.z/255.f);
+
+            //c.Value.x *= d.height;
+            //c.Value.y *= d.height;
+            //c.Value.z *= d.height;
+            mapDrawList->AddRectFilled(b,e,c);
+            //mapDrawList->AddRect(b,e,0xffffffff);
+            //snprintf(txt,64,"%.02f",d.height);
+            //mapDrawList->AddText(b,0xffffffff,txt);
+        }
+    }
+    ImGui::EndChild();
 }

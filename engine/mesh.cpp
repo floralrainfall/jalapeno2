@@ -264,7 +264,7 @@ std::vector<Data::Texture*> Data::Mesh::LoadMaterialTextures(aiMaterial *materia
             {
                 const aiTexture* tex = scene->GetEmbeddedTexture(str.C_Str());
                 engine_app->Logf("Mesh: loading tex data %s", texName2);
-                engine_app->texture_manager->PrecacheLoadTexture(texName2, tex->pcData, tex->mWidth);      
+                engine_app->texture_manager->PrecacheLoadTexture(texName2, tex->pcData, tex->mWidth);    
                 textures.push_back(engine_app->texture_manager->GetTexture(texName2));
             }
             else

@@ -98,7 +98,7 @@ target_include_directories(jalapeno2 PUBLIC
 	${shaderc_INCLUDE_DIR}
 )
 target_link_libraries(jalapeno2
-	bgfx SDL2 assimp ${shaderc_LIBRARIES} GameNetworkingSockets ${OPENAL_LIBRARY}
+	bgfx SDL2 assimp ${shaderc_LIBRARIES} GameNetworkingSockets ${OPENAL_LIBRARY} example-debugdraw
 )
 target_link_libraries(jpbsp
 	jalapeno2
