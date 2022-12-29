@@ -2,7 +2,10 @@
 #include <bgfx/bgfx.h>
 #include <stdarg.h>
 #include <easy/profiler.h>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
 #include "console.hpp"
+#include "engine.hpp"
 
 void Engine::App::ClientInit()
 {
@@ -109,4 +112,14 @@ char* Engine::App::GetAppName()
 char* Engine::App::GetAppDescription()
 {
     return "No app";
+}
+
+glm::vec2 Engine::App::UTIL_VToScreen(glm::vec3 vec)
+{
+    glm::vec4 v = camera.GetViewMatrix() * camera.proj * glm::vec4(vec,1.f);
+
+    v.x = GAME_FIXED_WIDTH * (vec.x + 1.0f) / 2.0f;
+    v.y = GAME_FIXED_HEIGHT * (1.0f - ((vec.y + 1.0f) / 2.0f));
+
+    return glm::vec2(v.x,v.y);
 }

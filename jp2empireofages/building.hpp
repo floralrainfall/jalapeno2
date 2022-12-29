@@ -2,6 +2,7 @@
 #define BUILDING_HPP
 
 #include "map.hpp"
+#include "polity.hpp"
 
 namespace EoA
 {
@@ -18,6 +19,7 @@ namespace EoA
         BT_Fort,
         BT_IndustrialPark,
         BT_FBaitBroadcast,
+        BT_Hub,
     };
 
     enum BuildingState
@@ -33,6 +35,7 @@ namespace EoA
     public:
         int building_progress;
         int building_next;
+        EoA::Polity* player_owner;
         bool building_currently;
         BuildingType type;
         BuildingType next_type;

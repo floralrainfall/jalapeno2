@@ -34,6 +34,8 @@ namespace EoA
     {
         MapTile tile;
         float height;
+        float noise2;
+        float noise3;
     };
 
     class MapNode : public Scene::SceneNode

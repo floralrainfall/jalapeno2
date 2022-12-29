@@ -22,9 +22,11 @@ namespace Engine
         LT_MESH,
         LT_SHADER,
     };
+
     class App
     {
         public:
+
             std::vector<IO::FileSystemDirectory> directories;
 
             volatile bool running = true;
@@ -70,6 +72,8 @@ namespace Engine
             virtual void Tick(); // server
 
             virtual void GUIRender();
+
+            glm::vec2 UTIL_VToScreen(glm::vec3 position);
     };
 };
 

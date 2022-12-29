@@ -12,6 +12,7 @@ uniform vec4 u_camera_viewpos;
 
 uniform vec4 u_fog_color;
 uniform vec4 u_fog_settings;
+uniform vec4 u_material_settings;
 
 struct Light 
 {
@@ -60,7 +61,7 @@ vec3 calc_u_light(Light i, vec3 normal, vec3 fragpos, vec3 viewdir) {
     vec3 lightDir = normalize(i.position.xyz - fragpos);
     float diff = max(dot(normal, lightDir), 0.0);
     vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewdir, reflectDir), 0.0), 32);
+    float spec = pow(max(dot(viewdir, reflectDir), 0.0), u_material_settings.x);
     float distance = length(i.position.xyz - v_fragpos);
     float attenuation = 1.0 / (i.constant + i.linear * distance + i.quadratic * (distance * distance));
     vec3 ambient = i.ambient.xyz;

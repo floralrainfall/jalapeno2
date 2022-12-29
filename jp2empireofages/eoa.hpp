@@ -1,0 +1,85 @@
+#ifndef EOA_HPP
+#define EOA_HPP
+#include <texture.hpp>
+
+namespace EoA
+{
+    extern Data::Texture *building_types_sheet;
+    extern Data::Texture *gen_assets_sheet;
+
+    enum GenAssetSheetIds
+    {
+        GAS_DeadRelation,
+        GAS_WarRelation,
+        GAS_MadRelation,
+        GAS_ShockedRelation,
+        GAS_NeutralRelation,
+        GAS_HappyRelation,
+        GAS_AllianceRelation,
+        GAS_SelfRelation,
+        GAS_Money,
+        GAS_Goods,
+        GAS_Population,
+        GAS_Happiness,
+        GAS_Research,
+        GAS_Food,
+        GAS_Peace,
+        GAS_War,
+        GAS_Trade,
+        GAS_Surrender,
+        GAS_ScorchEarth,
+        GAS_AdminMana,
+        GAS_TradeMana,
+        GAS_GoodsMoney,
+        GAS_WorkMoney,
+        GAS_Yes,
+        GAS_No,
+        GAS_UnknownOutcome,
+        GAS_Construction,
+        GAS_Intelligence,
+        GAS_Asterix,
+        GAS_Unknown,
+        GAS_RawResources,
+        GAS_HumanPlayer,
+        GAS_AIPlayer,
+        GAS_Defense,
+        GAS_Agility,
+        GAS_Attack,
+        GAS_Shock,
+        GAS_Sneak,
+        GAS_Ideas,
+        GAS_GoodIncrease,
+        GAS_BadDecrease,
+        GAS_BadIncrease,
+        GAS_GoodDecrease,
+        GAS_Cohesion,
+        GAS_Range,
+        GAS_FirstPlace,
+        GAS_SecondPlace,
+        GAS_ThirdPlace,
+        GAS_Gift,
+        GAS_Logo,
+        GAS_Disassemble,
+        GAS_Move,
+        GAS_Destroy,
+        GAS_Constructioning,
+        GAS_Co2Emissions,
+        GAS_Temperature,
+        GAS_Rainfall,
+        GAS_Sunny,
+        GAS_Cloudy,
+        GAS_ColdGreyMorning,
+        GAS_Foggy,
+        GAS_Lightning,
+        GAS_Co2,
+        GAS_Diplomat,
+        GAS_Warmonger,
+        GAS_Trader,
+        GAS_Industrialist,
+        GAS_Evil,
+        GAS_Climatist,
+        GAS_Militarist
+    };
+}
+
+#endif

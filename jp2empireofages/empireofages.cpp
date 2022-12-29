@@ -1,86 +1,23 @@
 #include <engine.hpp>
 #include "map.hpp"
 #include "building.hpp"
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/transform.hpp>
+#include "polity.hpp"
+#include "eoa.hpp"
 #include <imgui/imgui.h>
 #include <console.hpp>
 #include <ui.hpp>
+
+Data::Texture *EoA::building_types_sheet = nullptr;
+Data::Texture *EoA::gen_assets_sheet = nullptr;
 
 class EoAApp : public Engine::App
 {
 public:
     EoA::MapNode* map;
     EoA::MapNode* wanted_map;
+    EoA::Polity* player_polity;
 
     EoA::BuildingNode* selected_node;
-
-    Data::Texture *building_types_sheet;
-    Data::Texture *gen_assets_sheet;
-    enum GenAssetSheetIds
-    {
-        GAS_DeadRelation,
-        GAS_WarRelation,
-        GAS_MadRelation,
-        GAS_ShockedRelation,
-        GAS_NeutralRelation,
-        GAS_HappyRelation,
-        GAS_AllianceRelation,
-        GAS_SelfRelation,
-        GAS_Money,
-        GAS_Goods,
-        GAS_Population,
-        GAS_Happiness,
-        GAS_Research,
-        GAS_Food,
-        GAS_Peace,
-        GAS_War,
-        GAS_Trade,
-        GAS_Surrender,
-        GAS_ScorchEarth,
-        GAS_AdminMana,
-        GAS_TradeMana,
-        GAS_GoodsMoney,
-        GAS_WorkMoney,
-        GAS_Yes,
-        GAS_No,
-        GAS_UnknownOutcome,
-        GAS_Construction,
-        GAS_Intelligence,
-        GAS_Asterix,
-        GAS_Unknown,
-        GAS_RawResources,
-        GAS_Defense = GAS_RawResources+3,
-        GAS_Agility,
-        GAS_Attack,
-        GAS_Shock,
-        GAS_Sneak,
-        GAS_Ideas,
-        GAS_GoodIncrease,
-        GAS_BadDecrease,
-        GAS_BadIncrease,
-        GAS_GoodDecrease,
-        GAS_Cohesion,
-        GAS_Range,
-        GAS_FirstPlace,
-        GAS_SecondPlace,
-        GAS_ThirdPlace,
-        GAS_Gift,
-        GAS_Logo,
-        GAS_Disassemble,
-        GAS_Move,
-        GAS_Destroy,
-        GAS_Constructioning,
-        GAS_Co2Emissions,
-        GAS_Temperature,
-        GAS_Rainfall,
-        GAS_Sunny,
-        GAS_Cloudy,
-        GAS_ColdGreyMorning,
-        GAS_Foggy,
-        GAS_Lightning,
-        GAS_Co2
-    };
 
     enum { MainMenu, Game, NewGameMenu, BoatMode } game_mode = MainMenu;
 
@@ -98,13 +35,13 @@ public:
         PreLoad(Engine::LT_MESH, "mesh_city.gltf");
         PreLoad(Engine::LT_MESH, "mesh_unit_guy.gltf");
 
-        gen_assets_sheet = texture_manager->GetTexture("ui/ui_assets.png");
-        gen_assets_sheet->sprite_width = 64;
-        gen_assets_sheet->sprite_height = 64;
+        EoA::gen_assets_sheet = texture_manager->GetTexture("ui/ui_assets.png");
+        EoA::gen_assets_sheet->sprite_width = 64;
+        EoA::gen_assets_sheet->sprite_height = 64;
 
-        building_types_sheet = texture_manager->GetTexture("ui/ui_btypes.png");
-        building_types_sheet->sprite_width = 128;
-        building_types_sheet->sprite_height = 64;
+        EoA::building_types_sheet = texture_manager->GetTexture("ui/ui_btypes.png");
+        EoA::building_types_sheet->sprite_width = 128;
+        EoA::building_types_sheet->sprite_height = 64;
 
         ImColor skyrgb = ImColor();
         skyrgb.Value.x = 0.5294f;
@@ -123,7 +60,7 @@ public:
         camera.fog_color = glm::vec4(skyrgb.Value.x,skyrgb.Value.y,skyrgb.Value.z,1);
 
         Scene::DirectionalLightNode* d1 = new Scene::DirectionalLightNode(root_node);
-        d1->ambient = glm::vec4(1.0f,0.9f,0.7f,1);
+        d1->ambient = glm::vec4(0.173f,0.255f,0.398f,1);
         d1->diffuse = glm::vec4(1.0f,0.9f,0.9f,1);
         d1->specular = glm::vec4(1.0f,1.0f,0.9f,1);
         d1->direction = glm::vec4(1.0f,-1.0f,1.0f,1);
@@ -147,6 +84,8 @@ public:
                     camera.position.x += std::sin(glm::radians((float)frame_counter)) * 3.f;
                     camera.position.z += std::cos(glm::radians((float)frame_counter)) * 3.f;
                     camera.position.y += 5;
+
+                    EoA::Polity::TickPolities();
                 }
                 break;
             case BoatMode:
@@ -197,47 +136,50 @@ public:
                     ImGui::EndMenu();
                 }
 
-                uv_pos = gen_assets_sheet->GetSpriteUVs((int)GAS_Money);                
-                ImGui::Image((ImTextureID)gen_assets_sheet->texture.idx,size,ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));
-                ImGui::Text(": %i $");
-                uv_pos = gen_assets_sheet->GetSpriteUVs((int)GAS_Goods);                
-                ImGui::Image((ImTextureID)gen_assets_sheet->texture.idx,size,ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));
-                ImGui::Text(": %i kg");
-                uv_pos = gen_assets_sheet->GetSpriteUVs((int)GAS_RawResources);                
-                ImGui::Image((ImTextureID)gen_assets_sheet->texture.idx,size,ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));
-                ImGui::Text(": %i kg");
-                uv_pos = gen_assets_sheet->GetSpriteUVs((int)GAS_Temperature);                
-                ImGui::Image((ImTextureID)gen_assets_sheet->texture.idx,size,ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));
+                uv_pos = EoA::gen_assets_sheet->GetSpriteUVs((int)EoA::GAS_Money);                
+                ImGui::Image((ImTextureID)EoA::gen_assets_sheet->texture.idx,size,ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));
+                ImGui::Text(": %i $", player_polity->moneys);
+                uv_pos = EoA::gen_assets_sheet->GetSpriteUVs((int)EoA::GAS_Goods);                
+                ImGui::Image((ImTextureID)EoA::gen_assets_sheet->texture.idx,size,ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));
+                ImGui::Text(": %i kg", player_polity->goods);
+                uv_pos = EoA::gen_assets_sheet->GetSpriteUVs((int)EoA::GAS_RawResources);                
+                ImGui::Image((ImTextureID)EoA::gen_assets_sheet->texture.idx,size,ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));
+                ImGui::Text(": %i kg", player_polity->resources);
+                uv_pos = EoA::gen_assets_sheet->GetSpriteUVs((int)EoA::GAS_Temperature);                
+                ImGui::Image((ImTextureID)EoA::gen_assets_sheet->texture.idx,size,ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));
                 ImGui::Text(": %c%.2f degrees centigrade", (map->world_temperature_diff < 0.f)?'-':'+', map->world_temperature_diff);
-                uv_pos = gen_assets_sheet->GetSpriteUVs((int)GAS_Co2);                
-                ImGui::Image((ImTextureID)gen_assets_sheet->texture.idx,size,ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));
+                uv_pos = EoA::gen_assets_sheet->GetSpriteUVs((int)EoA::GAS_Co2);                
+                ImGui::Image((ImTextureID)EoA::gen_assets_sheet->texture.idx,size,ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));
                 ImGui::Text(": %.2f ppm", map->world_co2_ppm);
-                uv_pos = gen_assets_sheet->GetSpriteUVs((int)GAS_Rainfall + (int)map->weather);                
-                ImGui::Image((ImTextureID)gen_assets_sheet->texture.idx,size,ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));
+                uv_pos = EoA::gen_assets_sheet->GetSpriteUVs((int)EoA::GAS_Rainfall + (int)map->weather);                
+                ImGui::Image((ImTextureID)EoA::gen_assets_sheet->texture.idx,size,ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));
             }
             ImGui::EndMainMenuBar();
+            ImGui::Begin("Polities");
+            EoA::Polity::ImGuiDrawPolities(player_polity);
+            ImGui::End();
             if(selected_node)
             {
                 ImGui::Begin("Building");
                 if(selected_node->building_currently)
                 {                  
-                    uv_pos = gen_assets_sheet->GetSpriteUVs((int)GAS_Constructioning);                
-                    ImGui::Image((ImTextureID)gen_assets_sheet->texture.idx,ImVec2(64,64),ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));
+                    uv_pos = EoA::gen_assets_sheet->GetSpriteUVs((int)EoA::GAS_Constructioning);                
+                    ImGui::Image((ImTextureID)EoA::gen_assets_sheet->texture.idx,ImVec2(64,64),ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));
                     ImGui::SameLine();  
                     ImGui::Text("Construction is %0.1f percent complete.", ((float)selected_node->building_progress / selected_node->building_next) * 100.f);
                     ImGui::Separator();
                 }
-                uv_pos = building_types_sheet->GetSpriteUVs((int)selected_node->type);
-                ImGui::Image((ImTextureID)building_types_sheet->texture.idx,ImVec2(128,64),ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));
+                uv_pos = EoA::building_types_sheet->GetSpriteUVs((int)selected_node->type);
+                ImGui::Image((ImTextureID)EoA::building_types_sheet->texture.idx,ImVec2(128,64),ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));
                 ImGui::Separator(); 
-                uv_pos = gen_assets_sheet->GetSpriteUVs((int)GAS_Move);
-                ImGui::ImageButton((ImTextureID)gen_assets_sheet->texture.idx,ImVec2(32,32),ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));   
-                uv_pos = gen_assets_sheet->GetSpriteUVs((int)GAS_Disassemble);
+                uv_pos = EoA::gen_assets_sheet->GetSpriteUVs((int)EoA::GAS_Move);
+                ImGui::ImageButton((ImTextureID)EoA::gen_assets_sheet->texture.idx,ImVec2(32,32),ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));   
+                uv_pos = EoA::gen_assets_sheet->GetSpriteUVs((int)EoA::GAS_Disassemble);
                 ImGui::SameLine();
-                ImGui::ImageButton((ImTextureID)gen_assets_sheet->texture.idx,ImVec2(32,32),ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));   
-                uv_pos = gen_assets_sheet->GetSpriteUVs((int)GAS_Destroy);
+                ImGui::ImageButton((ImTextureID)EoA::gen_assets_sheet->texture.idx,ImVec2(32,32),ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));   
+                uv_pos = EoA::gen_assets_sheet->GetSpriteUVs((int)EoA::GAS_Destroy);
                 ImGui::SameLine();
-                ImGui::ImageButton((ImTextureID)gen_assets_sheet->texture.idx,ImVec2(32,32),ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));    
+                ImGui::ImageButton((ImTextureID)EoA::gen_assets_sheet->texture.idx,ImVec2(32,32),ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));    
                 ImGui::Separator(); 
                 if(ImGui::Button("Deselect"))
                 {
@@ -275,6 +217,17 @@ public:
                         wanted_map->GenerateMapData();
                         wanted_map->GenerateMap();
                         UI::im_aboutmenu_draw = false;
+
+                        EoA::Polity::ClearPolities();
+                        for(int i = 0; i < 4; i++)
+                        {
+                            EoA::Polity* new_polity = new EoA::Polity(wanted_map);
+                            new_polity->human = false;
+                            if(i == 0)
+                                player_polity = new_polity;
+                        }
+
+                        player_polity->human = true;
                     }
                     if(ImGui::Button("Quit"))
                         running = false;
@@ -292,33 +245,16 @@ public:
                     }
 
                     wanted_map->DbgWidgets();
+
+                    ImGui::Separator();
+                    EoA::Polity::ImGuiDrawPolities();
+                    ImGui::Separator();
                     
                     if(ImGui::Button("Start Game"))
                     {
                         map = wanted_map;
                         wanted_map = 0;
                         game_mode = Game;
-
-                        glm::vec2 city_start;
-
-                        EoA::MapTileData d;
-                        while(d.tile != EoA::WATER && d.tile != EoA::MOUNTAIN)
-                        {
-                            glm::vec2 guess = glm::vec2(rand() % MAP_WIDTH, rand() % MAP_HEIGHT);
-                            d = map->GetTileData(guess.x, guess.y);
-
-                            if(d.tile != EoA::WATER && d.tile != EoA::MOUNTAIN && d.tile != EoA::UNKNOWN)
-                            {
-                                city_start = guess;
-                            }
-                        }
-
-                        EoA::BuildingNode* city_node = new EoA::BuildingNode(map, root_node);
-                        city_node->map_x = city_start.x;
-                        city_node->map_y = city_start.y;
-                        city_node->next_type = EoA::BT_City;
-                        city_node->UpdateBuildingStage(true);
-                        selected_node = city_node;
                     }
                     ImGui::SameLine();
                     if(ImGui::Button("Go Sailing"))
@@ -335,6 +271,7 @@ public:
                         wanted_map->parent->children.remove(wanted_map);
                         delete wanted_map;
                         game_mode = MainMenu;
+                        EoA::Polity::ClearPolities();
                     }
                     ImGui::End();
                     break;

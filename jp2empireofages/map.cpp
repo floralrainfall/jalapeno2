@@ -5,6 +5,11 @@
 #include "perlin.h"
 #include <math.h>
 #include <imgui/imgui.h>
+#include <random>
+
+static std::random_device rd;
+static std::mt19937 gen(rd());
+static std::uniform_real_distribution<> noise_dist(-0.2f, 0.2f);
 
 EoA::MapNode::MapNode(Scene::SceneNode* parent) : Scene::SceneNode(parent)
 {
@@ -33,6 +38,12 @@ EoA::MapNode::~MapNode()
 
 void EoA::MapNode::CalcVtxNormal(int a, int b, int c)
 {
+    if(a >= vertices.size())
+        return;
+    if(b >= vertices.size())
+        return;
+    if(c >= vertices.size())
+        return;
     Data::PosColorVertex& v_a = vertices.at(a);
     Data::PosColorVertex& v_b = vertices.at(b);
     Data::PosColorVertex& v_c = vertices.at(c);
@@ -56,34 +67,40 @@ void EoA::MapNode::GenerateMapData()
             float fy = (float)j;
             perlin_noise_seed = seed;
             d.height = perlin2d(fx/MAP_WIDTH,fy/MAP_HEIGHT,4,4)-0.5f;
+            perlin_noise_seed++;
+            d.noise2 = perlin2d(fx/MAP_WIDTH/2.f,fy/MAP_HEIGHT/2.f,4,4);
+            perlin_noise_seed++;
+            d.noise3 = perlin2d(fx/MAP_WIDTH/2.f,fy/MAP_HEIGHT/2.f,4,4);
             glm::vec2 center = glm::vec2(MAP_WIDTH/2,MAP_HEIGHT/2);
             glm::vec2 position = glm::vec2(fx,fy);
+
+            float biome_noise = d.noise3 / 10.f;
             if(glm::distance(center,position) < radial)
             {
                 d.height *= std::cos(glm::distance(center,position)/radial * M_PI_2f) * radial_bias;
             }
             else
             {
-                d.height = ocean_threshold;
+                d.height = std::max(d.height, ocean_threshold);
+                d.height /= 10.f;
             }
             d.tile = WATER;
             if(d.height <= ocean_threshold)
             {
                 d.tile = WATER;
-                d.height = ocean_threshold;
             }
             else if(d.height < beach_threshold)
             {
                 d.tile = BEACH;
             }
-            else if(d.height > mountain_threshold)
+            else if(d.height > mountain_threshold + biome_noise)
             {
                 d.tile = MOUNTAIN;
             }
             else
             {
                 perlin_noise_seed = seed + 1;
-                float xtra_biome_sel = perlin2d(fx/32.f,fy/32.f,4,4);
+                float xtra_biome_sel = perlin2d(fx/MAP_WIDTH,fy/MAP_HEIGHT,4,4);
                 
                 if(xtra_biome_sel < forest_threshold)
                 {
@@ -128,9 +145,9 @@ glm::vec3 EoA::MapNode::GetTileColor(MapTile t, float h)
         case MapTile::WATER:
             v.x = 0;
             v.y = 0;
-            v.z = 127;
+            v.z = 255;
             heightfx = true;
-            h += 0.5f;
+            h -= 0.8f;
             break;
         case MapTile::GRASS:
             v.x = 0;
@@ -162,6 +179,17 @@ glm::vec3 EoA::MapNode::GetTileColor(MapTile t, float h)
         v.y *= std::abs(h);
         v.z *= std::abs(h);
     }
+    v.x = std::abs(v.x);
+    v.y = std::abs(v.y);
+    v.z = std::abs(v.z);
+
+    v.x = std::max(v.x,0.f);
+    v.y = std::max(v.y,0.f);
+    v.z = std::max(v.z,0.f);
+
+    v.x = std::min(v.x,255.f);
+    v.y = std::min(v.y,255.f);
+    v.z = std::min(v.z,255.f);
     return v;
 }
 
@@ -203,12 +231,12 @@ void EoA::MapNode::GenerateMap()
             v.g = colo.y;
             v.b = colo.z;
 
-            v.normal = glm::vec3(0.f, 1.f, 0.f);
+            //v.normal = glm::vec3(noise_dist(gen), noise_dist(gen), noise_dist(gen));
+            v.normal = glm::vec3(std::max(0.f,data.noise2 * 0.2f), 1.f, std::max(0.f,data.noise3 * 0.2f));
+            v.normal += glm::vec3(std::max(data.height,ocean_threshold), 0, std::max(data.height,ocean_threshold));
             v.vertex = glm::vec3(-MAP_WIDTH/2.f + x_pos, std::max(world_ocean_level * 100.f, height), -MAP_HEIGHT/2.f + y_pos);
 
             vertices.push_back(v);
-
-            vtx_id += 4;
         }
     }
 
@@ -220,7 +248,7 @@ void EoA::MapNode::GenerateMap()
             {
                 indices.push_back(j + MAP_WIDTH * (i + k));
             }
-            CalcVtxNormal(j + MAP_WIDTH * (i), j + MAP_WIDTH * (i + 1), 0);
+            CalcVtxNormal(j + MAP_WIDTH * (i + 0), j + MAP_WIDTH * (i + 1), j + MAP_WIDTH * (i + 2));
         }
     }
 

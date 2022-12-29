@@ -21,6 +21,7 @@ EoA::BuildingNode::BuildingNode(MapNode* map, Scene::SceneNode* parent) :
     map_y = MAP_HEIGHT/2;
 
     state = BS_Normal;
+    player_owner = nullptr;
 
     UpdateBuildingStage();
 }
@@ -33,6 +34,11 @@ void EoA::BuildingNode::Update()
     transform.pos.z = -MAP_HEIGHT/2 + map_y;
 
     UpdateBuildingStage();
+
+    if(!player_owner)
+        state = BS_Demolish;
+    else
+        transform.color = player_owner->color;
 }
 
 void EoA::BuildingNode::DbgWidgets()

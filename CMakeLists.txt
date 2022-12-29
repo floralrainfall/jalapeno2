@@ -86,10 +86,13 @@ add_executable(jp2scg
 )
 add_executable(jp2empireofages
 	jp2empireofages/empireofages.cpp
+	jp2empireofages/eoa.hpp
 	jp2empireofages/map.cpp
 	jp2empireofages/map.hpp
 	jp2empireofages/building.cpp
 	jp2empireofages/building.hpp
+	jp2empireofages/polity.cpp
+	jp2empireofages/polity.hpp
 	jp2empireofages/perlin.c
 	jp2empireofages/perlin.h
 )
