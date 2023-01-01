@@ -1,6 +1,7 @@
 #include "ui.hpp"
 #include "engine.hpp"
 #include <math.h>
+#include <chrono>
 #include "console.hpp"
 
 bool UI::im_aboutmenu_draw = true;
@@ -278,6 +279,8 @@ void UI::IMDrawDebugMenu()
     ImGui::End();
 }
 
+// why is C time so asinine?
+tm* date;
 void UI::IMDrawAboutMenu()
 {
     float t = sinf(((float)SDL_GetTicks())/100);
@@ -291,7 +294,16 @@ void UI::IMDrawAboutMenu()
         im_aboutmenu_draw = false;                    
     ImGui::SameLine();
     if(ImGui::Button("Quit"))
-        engine_app->running = false;
+        engine_app->running = false;    
+    if(date->tm_mon == 11 && date->tm_mday == 31)
+    {
+        ImGui::Separator();
+        ImGui::TextColored(ImVec4(abs(t),abs(t),0.0f,abs(t)),"Happy New Years Eve %i!", date->tm_year + 1901);
+    } else if(date->tm_mon == 0 && date->tm_mday == 1)
+    {
+        ImGui::Separator();
+        ImGui::TextColored(ImVec4(abs(t),abs(t),0.0f,abs(t)),"Happy New Year %i!", date->tm_year + 1900);
+    }
     ImGui::Separator();
     if(ImGui::BeginChild("about_xtra"))
     {
@@ -495,4 +507,8 @@ void UI::PrecacheUIAssets()
     ImGui::GetStyle().GrabRounding = 2;
     ImGui::GetStyle().LogSliderDeadzone = 4;
     ImGui::GetStyle().TabRounding = 4;
+
+    time_t ttime;
+    ttime = time(&ttime);
+    date = gmtime(&ttime);
 }
