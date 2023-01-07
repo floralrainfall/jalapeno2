@@ -44,12 +44,17 @@ void EoA::Polity::AIThink()
     int ai_lower_limit_goods = 100;
     int ai_lower_limit_resources = 75;
     int ai_lower_limit_moneys = 500;
+    int ai_lower_limit_military = 15;
 
     BuildingNode* actual_building_node = (BuildingNode*)current_building;
 
     if(actual_building_node)
     {
-
+        if(actual_building_node->building_currently == false)
+        {   
+            current_building = nullptr;
+        }
+        return;
     }
 
     if(wait_ticks)
@@ -86,6 +91,7 @@ int EoA::Polity::CalcRelations(Polity* other)
             relation -= other->gas_emission / 100;
             relation -= other->resources / 100;
             relation -= other->moneys / 1000 + other->goods / 100;
+            relation -= other->military_size / 10;
             break;
         case DIPLOMAT: // love everyone slightly
             relation += 10;
@@ -100,9 +106,10 @@ int EoA::Polity::CalcRelations(Polity* other)
             relation += other->moneys / 1000 + other->goods / 100;
             break;
         case EVIL: // just plain off evil
-            relation = -100;
+            relation = -1000;
             return relation;
         case MILITARIST:
+            relation += other->military_size / 10;
             break;
     }
 
@@ -165,10 +172,32 @@ void EoA::Polity::ImGuiDrawPolities(Polity* player)
         ImGui::Begin("Polity");
         if(selected_polity->style != PLAYER)
         {
+            ImVec2 size = ImVec2(18,18);
             uv_pos = gen_assets_sheet->GetSpriteUVs((int)GAS_Diplomat+(int)selected_polity->style);
             ImGui::Image((ImTextureID)gen_assets_sheet->texture.idx,ImVec2(64,64),ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));
             ImGui::SameLine();
             ImGui::Text("Style: %i\nRelationship to player: %i", (int)selected_polity->style, selected_polity->CalcRelations(player));
+            ImGui::Separator();
+            uv_pos = EoA::gen_assets_sheet->GetSpriteUVs((int)EoA::GAS_Money);                
+            ImGui::Image((ImTextureID)EoA::gen_assets_sheet->texture.idx,size,ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));            
+            ImGui::SameLine();
+            ImGui::Text(": %i $", selected_polity->moneys);
+            uv_pos = EoA::gen_assets_sheet->GetSpriteUVs((int)EoA::GAS_Goods);                
+            ImGui::Image((ImTextureID)EoA::gen_assets_sheet->texture.idx,size,ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));
+            ImGui::SameLine();
+            ImGui::Text(": %i kg", selected_polity->goods);
+            uv_pos = EoA::gen_assets_sheet->GetSpriteUVs((int)EoA::GAS_RawResources);                
+            ImGui::Image((ImTextureID)EoA::gen_assets_sheet->texture.idx,size,ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));     
+            ImGui::SameLine();
+            ImGui::Text(": %i kg", selected_polity->resources);
+            uv_pos = EoA::gen_assets_sheet->GetSpriteUVs((int)EoA::GAS_Population);                
+            ImGui::Image((ImTextureID)EoA::gen_assets_sheet->texture.idx,size,ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));     
+            ImGui::SameLine();
+            ImGui::Text(": %i people", selected_polity->population);
+            uv_pos = EoA::gen_assets_sheet->GetSpriteUVs((int)EoA::GAS_Intelligence);                
+            ImGui::Image((ImTextureID)EoA::gen_assets_sheet->texture.idx,size,ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));     
+            ImGui::SameLine();
+            ImGui::Text(": %i soldiers", selected_polity->population);
         }
         ImGui::End();
     }

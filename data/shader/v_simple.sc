@@ -2,6 +2,7 @@ $input a_position, a_normal, a_texcoord0, a_texcoord1, a_color0
 $output v_color0, v_normal, v_fragpos
 
 #include <bgfx_shader.sh>
+#include <common.sh>
 
 uniform mat3 u_modelMatrix;
 

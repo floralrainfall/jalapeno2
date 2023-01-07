@@ -18,6 +18,9 @@ public:
     EoA::Polity* player_polity;
 
     EoA::BuildingNode* selected_node;
+    EoA::BuildingType current_type = EoA::BT_Unknown;
+    float new_building_x = 0.f;
+    float new_building_y = 0.f;
 
     enum { MainMenu, Game, NewGameMenu, BoatMode } game_mode = MainMenu;
 
@@ -87,6 +90,20 @@ public:
 
                     EoA::Polity::TickPolities();
                 }
+                else if(current_type != EoA::BT_Unknown)
+                {
+                    new_building_x -= input_manager->GetInput("Horizontal");
+                    new_building_y += input_manager->GetInput("Vertical");
+                    camera.target = glm::vec3( -MAP_WIDTH/2 + new_building_x, 0,  -MAP_HEIGHT/2 + new_building_y);
+                    camera.position = camera.target;
+                    camera.position.z -= 10.f;
+                    camera.position.y += 10.f;
+                }
+                else
+                {
+                    camera.target = glm::vec3(0,0,0);
+                    camera.position = glm::vec3(0,16,-(MAP_HEIGHT/2));
+                }
                 break;
             case BoatMode:
                 {
@@ -133,6 +150,23 @@ public:
 
                 if(ImGui::BeginMenu("Build"))
                 {
+                    if(ImGui::MenuItem("City"))
+                        current_type = EoA::BT_City;
+                    if(ImGui::MenuItem("Barracks"))
+                        current_type = EoA::BT_Barracks;
+                    if(ImGui::MenuItem("Farm"))
+                        current_type = EoA::BT_Farm;
+                    if(ImGui::MenuItem("Research Lab"))
+                        current_type = EoA::BT_ResearchLab;
+                    if(ImGui::MenuItem("Factory"))
+                        current_type = EoA::BT_Factory;
+                    if(ImGui::MenuItem("Caravan Depot"))
+                        current_type = EoA::BT_CaravanDepot;
+                    if(ImGui::MenuItem("Fort"))
+                        current_type = EoA::BT_Fort;
+                    if(ImGui::MenuItem("Industrial Park"))
+                        current_type = EoA::BT_IndustrialPark;
+
                     ImGui::EndMenu();
                 }
 
@@ -158,6 +192,15 @@ public:
             ImGui::Begin("Polities");
             EoA::Polity::ImGuiDrawPolities(player_polity);
             ImGui::End();
+
+            if(current_type != EoA::BT_Unknown)
+            {
+                ImGui::Begin("Build New...");
+                if(ImGui::Button("Cancel"))
+                    current_type = EoA::BT_Unknown;
+                ImGui::End();
+            }
+
             if(selected_node)
             {
                 ImGui::Begin("Building");
@@ -228,6 +271,7 @@ public:
                         }
 
                         player_polity->human = true;
+                        player_polity->style = EoA::PLAYER;
                     }
                     if(ImGui::Button("Quit"))
                         running = false;
@@ -255,6 +299,8 @@ public:
                         map = wanted_map;
                         wanted_map = 0;
                         game_mode = Game;
+
+                        EoA::Polity::SpawnHubs();
                     }
                     ImGui::SameLine();
                     if(ImGui::Button("Go Sailing"))

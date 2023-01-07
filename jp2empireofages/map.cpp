@@ -104,11 +104,11 @@ void EoA::MapNode::GenerateMapData()
                 
                 if(xtra_biome_sel < forest_threshold)
                 {
-                    d.tile = GRASS;
+                    d.tile = FOREST;
                 }
                 else
                 {
-                    d.tile = FOREST;
+                    d.tile = GRASS;
                 }
             }
             map[i][j] = d;
@@ -118,8 +118,8 @@ void EoA::MapNode::GenerateMapData()
 
 EoA::MapTileData EoA::MapNode::GetTileData(int x, int y)
 {
-    if(x > 0 || x < MAP_WIDTH)
-        if(y > 0 || y < MAP_HEIGHT)
+    if(x > 0 && x < MAP_WIDTH)
+        if(y > 0 && y < MAP_HEIGHT)
         {
             if(world_ocean_level >= map[x][y].height)
                 map[x][y].tile = WATER;
@@ -156,9 +156,9 @@ glm::vec3 EoA::MapNode::GetTileColor(MapTile t, float h)
             heightfx = true;
             break;
         case MapTile::FOREST:
-            v.x = 0;
-            v.y = 54;
-            v.z = 23;
+            v.x = 21;
+            v.y = 68;
+            v.z = 6;
             heightfx = true;
             break;
         case MapTile::BEACH:
@@ -232,7 +232,7 @@ void EoA::MapNode::GenerateMap()
             v.b = colo.z;
 
             //v.normal = glm::vec3(noise_dist(gen), noise_dist(gen), noise_dist(gen));
-            v.normal = glm::vec3(std::max(0.f,data.noise2 * 0.2f), 1.f, std::max(0.f,data.noise3 * 0.2f));
+            v.normal = glm::vec3(std::max(0.f,data.noise2 * 0.01f), 1.f, std::max(0.f,data.noise3 * 0.01f));
             v.normal += glm::vec3(std::max(data.height,ocean_threshold), 0, std::max(data.height,ocean_threshold));
             v.vertex = glm::vec3(-MAP_WIDTH/2.f + x_pos, std::max(world_ocean_level * 100.f, height), -MAP_HEIGHT/2.f + y_pos);
 

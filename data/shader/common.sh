@@ -13,6 +13,7 @@ uniform vec4 u_camera_viewpos;
 uniform vec4 u_fog_color;
 uniform vec4 u_fog_settings;
 uniform vec4 u_material_settings;
+uniform vec4 u_time;
 
 struct Light 
 {

@@ -32,6 +32,7 @@ struct Camera
     bgfx::UniformHandle u_camera_position;
     bgfx::UniformHandle u_fog_settings;
     bgfx::UniformHandle u_fog_color;
+    bgfx::UniformHandle u_time;
 
     float fog_mindist;
     float fog_maxdist;

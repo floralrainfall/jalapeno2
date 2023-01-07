@@ -37,11 +37,12 @@ namespace EoA
         int number;
         bool human;
 
-        int moneys;
-        int goods;
-        int resources;
-        int population;
-        int gas_emission;
+        int moneys; // in $
+        int goods; // in kg
+        int resources; // in kg
+        int population; 
+        int gas_emission; // in kg
+        int military_size; // in units
         PolityStyle style;
 
         EoA::MapNode* map;

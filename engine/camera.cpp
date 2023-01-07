@@ -23,6 +23,7 @@ void Camera::Init()
 {
     u_fog_settings = bgfx::createUniform("u_fog_settings", bgfx::UniformType::Vec4);
     u_fog_color = bgfx::createUniform("u_fog_color", bgfx::UniformType::Vec4);
+    u_time = bgfx::createUniform("u_time", bgfx::UniformType::Vec4);
 }
 
 glm::mat4 Camera::GetViewMatrix()
@@ -41,6 +42,7 @@ void Camera::Update()
 {
     bgfx::setUniform(u_fog_color, &fog_color);
     bgfx::setUniform(u_fog_settings, &fog_mindist);
+    bgfx::setUniform(u_time, (void*)&engine_app->frame_counter);
     switch(projection)
     {
         default:
