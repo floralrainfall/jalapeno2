@@ -24,15 +24,16 @@ public:
     virtual void ClientInit()
     {
         IO::FileSystem::AddDataPath({.path = "scg"});
-        //IO::FileSystem::AddDataPath({.path = "scg/quake"});
+        IO::FileSystem::AddDataPath({.path = "scg/quake"});
         PreLoad(Engine::LT_MESH, "teapot.obj");
         bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x0);
         Debug::Console::enabled = false;
         Debug::Console::accessible = true;
 
-        camera.proj = glm::perspective(90.f,1.f,0.1f,1000.0f);
+        camera.worldup = glm::vec3(0.f,1.f,0.f);
         camera.up = camera.worldup;
         camera.mode = CM_FREE;
+        camera.projection = CP_PERSPECTIVE;
         camera.pitch = 0.f;
         camera.yaw = 0.f;
         
@@ -47,7 +48,7 @@ public:
         input_manager->AddInputFunction({.mode = Input::IM_KEYBOARD, .data = (void*)SDLK_BACKQUOTE},[&](){ focusMode = !focusMode; });
         input_manager->AddInput({.name = "Jump", .source = {.mode = Input::IM_KEYBOARD, .data = (void*)SDLK_SPACE}});
 
-        JPBSP::BSPSceneNode* s1 = new JPBSP::BSPSceneNode("maps/1smallmap.bsp", root_node);
+        JPBSP::BSPSceneNode* s1 = new JPBSP::BSPSceneNode("maps/test_bigbox.bsp", root_node);
         local_player->map = s1;
         local_player->transform.pos.y += 10.f;
         s1->draw_collision = true;

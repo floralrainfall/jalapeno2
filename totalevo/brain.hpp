@@ -40,6 +40,7 @@ namespace TE
         NON_MOVESIDEWAYS,
         NON_MOUTHSIZE,
         NON_TOXINRANGE,
+        NON_HIBERNATION,
         NUM_OUTPUT_NEURONS,
     };
 
@@ -51,6 +52,7 @@ namespace TE
         MEMORY_OUT,
         SUBTRACT,
         DIVIDE,
+        ATAN2,
         ADD,
         Count,
     };

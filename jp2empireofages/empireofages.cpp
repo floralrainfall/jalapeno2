@@ -62,6 +62,11 @@ public:
         camera.fog_mindist = 0.1f;
         camera.fog_color = glm::vec4(skyrgb.Value.x,skyrgb.Value.y,skyrgb.Value.z,1);
 
+        camera.orthographic_settings.bottom = -MAP_HEIGHT/2;
+        camera.orthographic_settings.top = MAP_HEIGHT/2;
+        camera.orthographic_settings.left = -MAP_WIDTH/2;
+        camera.orthographic_settings.right = MAP_WIDTH/2;
+
         Scene::DirectionalLightNode* d1 = new Scene::DirectionalLightNode(root_node);
         d1->ambient = glm::vec4(0.173f,0.255f,0.398f,1);
         d1->diffuse = glm::vec4(1.0f,0.9f,0.9f,1);
@@ -80,6 +85,7 @@ public:
 
                 break;
             case Game:
+                camera.fog_maxdist = MAP_WIDTH/2.f;
                 if(selected_node)
                 {
                     camera.target = selected_node->transform.pos;
@@ -87,6 +93,7 @@ public:
                     camera.position.x += std::sin(glm::radians((float)frame_counter)) * 3.f;
                     camera.position.z += std::cos(glm::radians((float)frame_counter)) * 3.f;
                     camera.position.y += 5;
+                    camera.projection = CP_PERSPECTIVE;
 
                     EoA::Polity::TickPolities();
                 }
@@ -98,15 +105,20 @@ public:
                     camera.position = camera.target;
                     camera.position.z -= 10.f;
                     camera.position.y += 10.f;
+                    camera.projection = CP_PERSPECTIVE;
                 }
                 else
                 {
                     camera.target = glm::vec3(0,0,0);
-                    camera.position = glm::vec3(0,16,-(MAP_HEIGHT/2));
+                    camera.position = glm::vec3(-MAP_WIDTH,MAP_WIDTH+MAP_HEIGHT,-MAP_HEIGHT);
+                    camera.projection = CP_ORTHOGRAPHIC;
+                    camera.mode = CM_TARGET;
+                    camera.fog_maxdist = MAP_WIDTH * MAP_HEIGHT;
                 }
                 break;
             case BoatMode:
                 {
+                    camera.projection = CP_PERSPECTIVE;
                     camera.yaw += input_manager->GetInput("Horizontal") * delta_time / 10.f;
                     float camera_new_x = camera_x, camera_new_y = camera_y;
                     camera_new_x += std::cos(glm::radians(camera.yaw)) * input_manager->GetInput("Vertical") * delta_time / 10.f;
@@ -122,6 +134,7 @@ public:
                 }
                 break;
             case NewGameMenu:
+                camera.projection = CP_PERSPECTIVE;
                 camera.mode = CM_TARGET;
                 camera.target = glm::vec3(0.f,16.f,0.f);
                 camera.position = glm::vec3(std::sin(frame_counter/50.f)*(MAP_WIDTH/4.f),32.f,std::cos(frame_counter/50.f)*(MAP_HEIGHT/4.f));

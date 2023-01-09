@@ -37,20 +37,6 @@ void JPBSP::BSPFile::FixVertex(BSPVertex& vertex)
     //Swizzle(vertex.normal);
 }
 
-void JPBSP::BSPFile::Swizzle(float* v, bool s)
-{
-    float temp = v[1];
-    v[1] = v[2];
-    v[2] = -temp;
-
-    if(s)
-    {
-        v[0] *= 0.03f;
-        v[1] *= 0.03f;
-        v[2] *= 0.03f;
-    }
-}
-
 void JPBSP::BSPFile::Swizzle(int* v)
 {
     int temp = v[1];

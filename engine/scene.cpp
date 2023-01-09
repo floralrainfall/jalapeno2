@@ -4,6 +4,7 @@
 #include <random>
 #include <string>
 #include "imgui/imgui.h"
+#include "stb_image.h"
 
 bgfx::UniformHandle Scene::DirectionalLightNode::u_direction;
 bgfx::UniformHandle Scene::DirectionalLightNode::u_ambient;
@@ -145,6 +146,38 @@ Scene::SceneNode::FindResult Scene::SceneNode::GetChildClosestTo(uint64_t tag, g
         }
     }
     return f;
+}
+
+Scene::SkyboxNode::SkyboxNode(Scene::SceneNode* parent)
+{
+
+}
+
+void Scene::SkyboxNode::LoadTexture(const char* texture)
+{
+    int width, height, nr_channels;
+    char* data;
+    bgfx::TextureHandle cubemap_texture = bgfx::createTextureCube(512*512*3,false,1,bgfx::TextureFormat::RGB8,0);
+    char* texture_side_names[] = {
+        "right",
+        "left",
+        "top",
+        "bottom",
+        "back",
+        "front",
+    };
+    for(int i = 0; i < 6; i++)
+    {
+        char tex_name[128];
+        snprintf(tex_name,128,"%s_%s",texture_side_names[i],texture);
+        data = (char*)stbi_load(tex_name,&width,&height,&nr_channels,3);
+        bgfx::updateTextureCube(cubemap_texture,1,i,0,0,0,width,height,bgfx::makeRef(data,width*height*3));    
+    }
+}
+
+void Scene::SkyboxNode::Render()
+{
+    
 }
 
 void Scene::MeshNode::Render()

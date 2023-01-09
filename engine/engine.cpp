@@ -60,6 +60,7 @@ int main(int argc, char** argv)
         {
             SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Version mismatch", "engine_app and engine have different versions", window);
         }
+        engine_app->engine_window = window;
         //SDL_GLContext context = SDL_GL_CreateContext(window);
         SDL_SysWMinfo wmi;
         SDL_VERSION(&wmi.version);

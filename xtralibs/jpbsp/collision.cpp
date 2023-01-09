@@ -11,7 +11,7 @@ glm::vec3 CollisionSwizzleVecs(float* vecs)
     glm::vec3 d;
     d.x = vecs[0];
     d.y = vecs[2];
-    d.z = -vecs[1];
+    d.z = vecs[1];
     return d;
 }
 

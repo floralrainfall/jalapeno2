@@ -66,7 +66,8 @@ void EoA::MapNode::GenerateMapData()
             float fx = (float)i;
             float fy = (float)j;
             perlin_noise_seed = seed;
-            d.height = perlin2d(fx/MAP_WIDTH,fy/MAP_HEIGHT,4,4)-0.5f;
+            //d.height = perlin2d(fx/MAP_WIDTH,fy/MAP_HEIGHT,4,4)-0.5f;
+            d.height = std::atan2(-MAP_WIDTH/2.f+fy,-MAP_HEIGHT/2.f+fx);
             perlin_noise_seed++;
             d.noise2 = perlin2d(fx/MAP_WIDTH/2.f,fy/MAP_HEIGHT/2.f,4,4);
             perlin_noise_seed++;
@@ -100,9 +101,9 @@ void EoA::MapNode::GenerateMapData()
             else
             {
                 perlin_noise_seed = seed + 1;
-                float xtra_biome_sel = perlin2d(fx/MAP_WIDTH,fy/MAP_HEIGHT,4,4);
+                float xtra_biome_sel = perlin2d(fx/MAP_WIDTH,fy/MAP_HEIGHT,4,4) + (biome_noise / 100.f) * (d.height + 0.1f / 1.f);
                 
-                if(xtra_biome_sel < forest_threshold)
+                if(xtra_biome_sel > forest_threshold)
                 {
                     d.tile = FOREST;
                 }
@@ -118,8 +119,8 @@ void EoA::MapNode::GenerateMapData()
 
 EoA::MapTileData EoA::MapNode::GetTileData(int x, int y)
 {
-    if(x > 0 && x < MAP_WIDTH)
-        if(y > 0 && y < MAP_HEIGHT)
+    if(x >= 0 && x < MAP_WIDTH)
+        if(y >= 0 && y < MAP_HEIGHT)
         {
             if(world_ocean_level >= map[x][y].height)
                 map[x][y].tile = WATER;
@@ -231,9 +232,10 @@ void EoA::MapNode::GenerateMap()
             v.g = colo.y;
             v.b = colo.z;
 
+            //v.normal = glm::vec3(0.f,1.f,0.f);
             //v.normal = glm::vec3(noise_dist(gen), noise_dist(gen), noise_dist(gen));
-            v.normal = glm::vec3(std::max(0.f,data.noise2 * 0.01f), 1.f, std::max(0.f,data.noise3 * 0.01f));
-            v.normal += glm::vec3(std::max(data.height,ocean_threshold), 0, std::max(data.height,ocean_threshold));
+            v.normal = glm::vec3(std::max(0.f,data.noise2 * 0.1f), 1.f - std::max(0.f,data.noise2 * 0.01f) + std::max(0.f,data.noise3 * 0.1f), std::max(0.f,data.noise3 * 0.1f));
+            //v.normal += glm::vec3(std::max(data.height,ocean_threshold), 0, std::max(data.height,ocean_threshold));
             v.vertex = glm::vec3(-MAP_WIDTH/2.f + x_pos, std::max(world_ocean_level * 100.f, height), -MAP_HEIGHT/2.f + y_pos);
 
             vertices.push_back(v);
@@ -248,7 +250,7 @@ void EoA::MapNode::GenerateMap()
             {
                 indices.push_back(j + MAP_WIDTH * (i + k));
             }
-            CalcVtxNormal(j + MAP_WIDTH * (i + 0), j + MAP_WIDTH * (i + 1), j + MAP_WIDTH * (i + 2));
+            CalcVtxNormal(j + MAP_WIDTH * (i + 0), j + MAP_WIDTH * (i + 1), 0);
         }
     }
 

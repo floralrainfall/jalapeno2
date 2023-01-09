@@ -79,7 +79,6 @@ void SCG::Player::Update()
         }
     }
 
-
     engine_app->camera.up = glm::vec3(0.f,1.f,0.f);
     engine_app->camera.mode = CM_FREE;
     engine_app->camera.position = transform.pos;
@@ -91,6 +90,5 @@ void SCG::Player::Update()
     if(new_pitch < -85.f)
         new_pitch = -85.f;
     engine_app->camera.pitch = new_pitch;
-    engine_app->camera.Update();
 }
 

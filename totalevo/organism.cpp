@@ -137,24 +137,24 @@ void TE::Organism::Update()
     if(pause)
         return;
 
-    age += 0.01f * engine_app->delta_time;
+    age += 0.001f * engine_app->delta_time;
     
     if(status == DEAD)
         return;
 
     if(energy >= 35.f && growthAmount != 1.0f)
     {
-        growthAmount += (s.growthRate) * SPEED_RATE;
+        growthAmount += (s.growthRate) * SPEED_RATE * std::max(0.1f,s.speciesBrain->outputs[NON_HIBERNATION]);
         if(s.speciesBrain && engine_app->frame_counter % 15 == 0) 
             s.speciesBrain->Mutate();
-        energy -= (s.growthRate) * SPEED_RATE;    
+        energy -= (s.growthRate) * SPEED_RATE * std::max(0.1f,s.speciesBrain->outputs[NON_HIBERNATION]);    
     }
-    energy -= (RATE_AGING * (age / 120.f)) * SPEED_RATE;
-    energy -= (s.sightDistance * 0.001f) * SPEED_RATE;
+    energy -= (RATE_AGING * (age / 120.f)) * SPEED_RATE * std::max(0.1f,s.speciesBrain->outputs[NON_HIBERNATION]);
+    energy -= (s.sightDistance * 0.0001f) * SPEED_RATE * std::max(0.1f,s.speciesBrain->outputs[NON_HIBERNATION]);
     if(s.speciesBrain)
     {
-        energy -= (s.speciesBrain->neurons->size() * 0.001f) * SPEED_RATE;
-        energy -= (std::abs(s.speciesBrain->outputs[NON_TOXINRANGE]) * 0.01f) * SPEED_RATE;
+        energy -= (s.speciesBrain->neurons->size() * 0.001f) * SPEED_RATE * std::max(0.1f,s.speciesBrain->outputs[NON_HIBERNATION]);
+        energy -= (std::abs(s.speciesBrain->outputs[NON_TOXINRANGE]) * 0.01f) * SPEED_RATE * std::max(0.1f,s.speciesBrain->outputs[NON_HIBERNATION]);
     }
 
     CLAMP(growthAmount, 1.f, 0.f);
@@ -163,7 +163,7 @@ void TE::Organism::Update()
     if(energy <= 0.f)
     {
         // start dying
-        health -= ((RATE_AGING * (age / 30.f) * (s.scale * 10.f)) + RATE_METABOLIZE) * SPEED_RATE;
+        health -= ((RATE_AGING * (age / 30.f) * (s.scale * 10.f)) + RATE_METABOLIZE) * SPEED_RATE * std::max(0.1f,s.speciesBrain->outputs[NON_HIBERNATION]);
     }
 
     CLAMP(health, 100.f, 0.f);
@@ -177,8 +177,8 @@ void TE::Organism::Update()
         Organism* organism = (Organism*)budder.found;
         if(organism != this)
         {
-            organism->health -= 2.f * (s.speciesBrain->outputs[NON_TOXINRANGE]-budder.distance) * engine_app->delta_time;
-            organism->energy -= 4.f * (s.speciesBrain->outputs[NON_TOXINRANGE]-budder.distance) * engine_app->delta_time;
+            organism->health -= 2.f * (s.speciesBrain->outputs[NON_TOXINRANGE]-budder.distance) * engine_app->delta_time * std::max(0.1f,s.speciesBrain->outputs[NON_HIBERNATION]);
+            organism->energy -= 4.f * (s.speciesBrain->outputs[NON_TOXINRANGE]-budder.distance) * engine_app->delta_time * std::max(0.1f,s.speciesBrain->outputs[NON_HIBERNATION]);
         }
     }
 
@@ -233,13 +233,13 @@ void TE::Organism::Update()
         s.speciesBrain->inputs[NIN_GROWTH] = growthAmount;
         s.speciesBrain->Evaluate(true);
         transform.eulerRot.y += s.speciesBrain->outputs[NON_ROTATE];
-        float totalSpeed = std::abs(std::max(0.15f,stamina) * std::sin(transform.eulerRot.z) * s.speciesBrain->outputs[NON_MOVEFORWARD] * engine_app->delta_time + std::max(0.15f,stamina) * std::cos(transform.eulerRot.y) * s.speciesBrain->outputs[NON_MOVEFORWARD] * engine_app->delta_time);
-        totalSpeed += std::abs(std::max(0.15f,stamina) * std::cos(transform.eulerRot.z) * s.speciesBrain->outputs[NON_MOVESIDEWAYS] * engine_app->delta_time + std::max(0.15f,stamina) * std::sin(transform.eulerRot.y) * s.speciesBrain->outputs[NON_MOVESIDEWAYS] * engine_app->delta_time);
+        float totalSpeed = std::abs(std::max(0.15f,stamina) * std::sin(transform.eulerRot.z) * s.speciesBrain->outputs[NON_MOVEFORWARD] * engine_app->delta_time + std::max(0.15f,stamina) * std::cos(transform.eulerRot.y) * s.speciesBrain->outputs[NON_MOVEFORWARD] * engine_app->delta_time * std::max(0.1f,s.speciesBrain->outputs[NON_HIBERNATION]));
+        totalSpeed += std::abs(std::max(0.15f,stamina) * std::cos(transform.eulerRot.z) * s.speciesBrain->outputs[NON_MOVESIDEWAYS] * engine_app->delta_time + std::max(0.15f,stamina) * std::sin(transform.eulerRot.y) * s.speciesBrain->outputs[NON_MOVESIDEWAYS] * engine_app->delta_time * std::max(0.1f,s.speciesBrain->outputs[NON_HIBERNATION]));
         energy -= totalSpeed * engine_app->delta_time * 0.0001f;
-        transform.pos.x += std::max(0.15f,stamina) * std::sin(transform.eulerRot.z) * s.speciesBrain->outputs[NON_MOVEFORWARD] * engine_app->delta_time * 0.1f;
-        transform.pos.z += std::max(0.15f,stamina) * std::cos(transform.eulerRot.z) * s.speciesBrain->outputs[NON_MOVEFORWARD] * engine_app->delta_time * 0.1f;
-        transform.pos.x += std::max(0.15f,stamina) * std::cos(transform.eulerRot.z) * s.speciesBrain->outputs[NON_MOVESIDEWAYS] * engine_app->delta_time * 0.1f;
-        transform.pos.z += std::max(0.15f,stamina) * std::sin(transform.eulerRot.z) * s.speciesBrain->outputs[NON_MOVESIDEWAYS] * engine_app->delta_time * 0.1f;
+        transform.pos.x += std::max(0.15f,stamina) * std::sin(transform.eulerRot.z) * s.speciesBrain->outputs[NON_MOVEFORWARD] * engine_app->delta_time * 0.1f * std::max(0.1f,s.speciesBrain->outputs[NON_HIBERNATION]);
+        transform.pos.z += std::max(0.15f,stamina) * std::cos(transform.eulerRot.z) * s.speciesBrain->outputs[NON_MOVEFORWARD] * engine_app->delta_time * 0.1f * std::max(0.1f,s.speciesBrain->outputs[NON_HIBERNATION]);
+        transform.pos.x += std::max(0.15f,stamina) * std::cos(transform.eulerRot.z) * s.speciesBrain->outputs[NON_MOVESIDEWAYS] * engine_app->delta_time * 0.1f * std::max(0.1f,s.speciesBrain->outputs[NON_HIBERNATION]);
+        transform.pos.z += std::max(0.15f,stamina) * std::sin(transform.eulerRot.z) * s.speciesBrain->outputs[NON_MOVESIDEWAYS] * engine_app->delta_time * 0.1f * std::max(0.1f,s.speciesBrain->outputs[NON_HIBERNATION]);
         if(totalSpeed > 0.5f)
         {
             stamina -= 0.01f * totalSpeed * engine_app->delta_time;

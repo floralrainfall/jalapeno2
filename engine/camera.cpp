@@ -35,6 +35,10 @@ glm::mat4 Camera::GetViewMatrix()
             return glm::lookAt(position, target, up);
         case CM_FREE:
             return glm::lookAt(position, position + front, up);
+        case CM_TARGETLH:
+            return glm::lookAtLH(position, target, up);
+        case CM_FREELH:
+            return glm::lookAtLH(position, position + front, up);
     }
 }
 
@@ -48,10 +52,16 @@ void Camera::Update()
         default:
             break;
         case CP_PERSPECTIVE:
-            proj = glm::perspective(perspective_settings.fov, (float)GAME_FIXED_WIDTH / (float)GAME_FIXED_HEIGHT, perspective_settings.near, perspective_settings.far);
+            proj = glm::perspective(glm::radians(perspective_settings.fov), (float)GAME_FIXED_WIDTH / (float)GAME_FIXED_HEIGHT, perspective_settings.near, perspective_settings.far);
             break;
         case CP_ORTHOGRAPHIC:
-            proj = glm::ortho(orthographic_settings.left, orthographic_settings.right, orthographic_settings.bottom, orthographic_settings.top);
+            proj = glm::ortho(orthographic_settings.left, orthographic_settings.right, orthographic_settings.bottom, orthographic_settings.top, perspective_settings.near, perspective_settings.far);
+            break;
+        case CP_PERSPECTIVELH:
+            proj = glm::perspectiveLH(glm::radians(perspective_settings.fov), (float)GAME_FIXED_WIDTH / (float)GAME_FIXED_HEIGHT, perspective_settings.near, perspective_settings.far);
+            break;
+        case CP_ORTHOGRAPHICLH:
+            proj = glm::orthoLH(orthographic_settings.left, orthographic_settings.right, orthographic_settings.bottom, orthographic_settings.top, perspective_settings.near, perspective_settings.far);
             break;
     }
     switch(mode)

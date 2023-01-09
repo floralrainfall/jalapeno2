@@ -13,5 +13,5 @@ void main() {
 
     vec3 result_light_color = texture2D(texture1, v_texcoord1).xyz;
     vec3 dlightresult = calc_d_light(norm, viewDir) + result_light_color;
-    gl_FragColor = mix_fog(dist,v_color0 * texture2D(texture0, v_texcoord0) * vec4(dlightresult, 1.0));
+    gl_FragColor = mix_fog(dist, texture2D(texture0, v_texcoord0) * vec4(dlightresult, 1.0));
 }

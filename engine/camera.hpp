@@ -8,6 +8,8 @@ enum CameraMode
 {
     CM_TARGET,
     CM_FREE,
+    CM_TARGETLH,
+    CM_FREELH,
 };
 
 enum CameraProjection
@@ -15,6 +17,8 @@ enum CameraProjection
     CP_MANUAL,
     CP_PERSPECTIVE,
     CP_ORTHOGRAPHIC,
+    CP_PERSPECTIVELH,
+    CP_ORTHOGRAPHICLH,
 };
 
 struct Camera

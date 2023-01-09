@@ -71,6 +71,14 @@ namespace Scene
         FindResult GetChildClosestTo(uint64_t tag, glm::vec3 position, SceneNode* exclude = nullptr);
     };
 
+    class SkyboxNode : public SceneNode
+    {
+    public:
+        SkyboxNode(SceneNode* parent);
+        void LoadTexture(const char* name);
+        virtual void Render();
+    };
+
     class MeshNode : public SceneNode
     {
     public:

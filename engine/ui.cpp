@@ -136,6 +136,14 @@ void UI::IMDrawDebugMenu()
                 ImGui::DragFloat("Camera Fog Min Dist", &engine_app->camera.fog_mindist,1.f,0.1f,1000.f);
                 ImGui::InputFloat3("Camera Fog Color", (float*)&engine_app->camera.fog_color);
                 ImGui::InputInt("Camera Mode", (int*)&engine_app->camera.mode);
+                ImGui::InputInt("Camera Projection", (int*)&engine_app->camera.projection);
+                ImGui::InputFloat("Camera Orthographic Left", &engine_app->camera.orthographic_settings.left);
+                ImGui::InputFloat("Camera Orthographic Right", &engine_app->camera.orthographic_settings.right);
+                ImGui::InputFloat("Camera Orthographic Top", &engine_app->camera.orthographic_settings.top);
+                ImGui::InputFloat("Camera Orthographic Bottom", &engine_app->camera.orthographic_settings.bottom);
+                ImGui::InputFloat("Camera Perspective Far", &engine_app->camera.perspective_settings.far);
+                ImGui::InputFloat("Camera Perspective Near", &engine_app->camera.perspective_settings.near);
+                ImGui::InputFloat("Camera Perspective FOV", &engine_app->camera.perspective_settings.fov);
                 ImGui::Text("GetAppName: %s", engine_app->GetAppName());
                 ImGui::Text("GetAppDescription: %s", engine_app->GetAppDescription());
                 ImGui::EndTabItem();
@@ -429,6 +437,7 @@ void UI::PrecacheUIAssets()
     roboto_regular = io.Fonts->AddFontFromFileTTF("data/ui/Roboto-Regular.ttf", 16.0f);
     roboto_black = io.Fonts->AddFontFromFileTTF("data/ui/Roboto-Black.ttf", 16.0f);
     engine_app->PreLoad(Engine::LT_TEXTURE, "ui/disconnected.png");
+    engine_app->PreLoad(Engine::LT_TEXTURE, "ui/ui_font.png");
     brand_texture = engine_app->texture_manager->GetTexture("brand.png");
 
     ImVec4* colors = ImGui::GetStyle().Colors;

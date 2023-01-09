@@ -30,6 +30,7 @@ EoA::Polity::Polity(EoA::MapNode* map)
     resources = 200;
     population = 1000;
     gas_emission = 0;
+    military_size = 0;
 
     style = (PolityStyle)style_dist(gen);
 
@@ -197,7 +198,7 @@ void EoA::Polity::ImGuiDrawPolities(Polity* player)
             uv_pos = EoA::gen_assets_sheet->GetSpriteUVs((int)EoA::GAS_Intelligence);                
             ImGui::Image((ImTextureID)EoA::gen_assets_sheet->texture.idx,size,ImVec2(uv_pos.x,uv_pos.y),ImVec2(uv_pos.z,uv_pos.w));     
             ImGui::SameLine();
-            ImGui::Text(": %i soldiers", selected_polity->population);
+            ImGui::Text(": %i units", selected_polity->military_size);
         }
         ImGui::End();
     }
@@ -220,6 +221,7 @@ void EoA::Polity::SpawnHubs()
         glm::vec2 city_start;
 
         EoA::MapTileData d;
+        d.tile = EoA::WATER;
         while(d.tile != EoA::WATER && d.tile != EoA::MOUNTAIN)
         {
             glm::vec2 guess = glm::vec2(x_position_dist(gen), y_position_dist(gen));

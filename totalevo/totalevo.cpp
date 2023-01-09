@@ -230,6 +230,7 @@ public:
             }
         }
 
+        camera.fog_maxdist = 1000.f;
         if(trackedOrganism)
         {
             TE::Brain* trackedBrain = trackedOrganism->s.speciesBrain;
@@ -239,19 +240,22 @@ public:
                     {            
                         camera.target = trackedOrganism->transform.pos;
                         camera.position = trackedOrganism->transform.pos;
-                        glm::vec3 position = camera.target;
-                        position.x += std::sin(((float)frame_counter)/100.f)*10.f;
-                        position.z += std::cos(((float)frame_counter)/100.f)*10.f;
-                        camera.position = position;
-                        camera.position.y = 10.f;
+                        camera.position.y += 10.f;
+                        camera.projection = CP_ORTHOGRAPHIC;
+                        camera.mode = CM_TARGET;
+                        camera.orthographic_settings.top = 2;
+                        camera.orthographic_settings.bottom = -2;
+                        camera.orthographic_settings.right = 2;
+                        camera.orthographic_settings.left = -2;
                     }
                     break;
                 case CT_FIRSTPERSON:
                     {
                         camera.mode = CM_FREE;
+                        camera.projection = CP_PERSPECTIVE;
                         camera.position = trackedOrganism->transform.pos;
-                        camera.yaw = trackedOrganism->transform.eulerRot.x;
-                        camera.pitch = trackedOrganism->transform.eulerRot.z;
+                        camera.yaw = trackedOrganism->transform.eulerRot.z + 180.f;
+                        camera.fog_maxdist = trackedOrganism->s.sightDistance;
                     }
                     break;
             }
@@ -259,8 +263,13 @@ public:
         else
         {
             camera.target = glm::vec3(0,0,0);
-            camera.position = glm::vec3(400,100,100);
+            camera.position = glm::vec3(400,400,100);
             camera.mode = CM_TARGET;
+            camera.projection = CP_ORTHOGRAPHIC;
+            camera.orthographic_settings.top = 100;
+            camera.orthographic_settings.bottom = -100;
+            camera.orthographic_settings.right = 100;
+            camera.orthographic_settings.left = -100;
         }
     }
 

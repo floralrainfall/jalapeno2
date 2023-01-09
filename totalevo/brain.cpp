@@ -1,6 +1,7 @@
 #include "brain.hpp"
 #include <random>
 #include <imgui/imgui.h>
+#include <cmath>
 #include "organism.hpp"
 
 static std::random_device rd;
@@ -110,11 +111,15 @@ float TE::Brain::EvaluateNeuron(int i)
         case NeuronType::MULTIPLY:
             intermediate = inputs[n.input1] * n.value;
             break;
+        case NeuronType::ATAN2:
+            intermediate = atan2(inputs[n.input1],inputs[n.input2]) * n.value;
+            break;
         default:
         case NeuronType::MULTIPLY2:
             intermediate = (inputs[n.input1] * inputs[n.input2]) * n.value;
             break;
     }
+    intermediate = std::atan(intermediate); // sigmoid
     CLIP(intermediate);
     return intermediate;
 }

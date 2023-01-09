@@ -28,6 +28,7 @@ namespace Engine
         public:
 
             std::vector<IO::FileSystemDirectory> directories;
+            SDL_Window* engine_window;
 
             volatile bool running = true;
             volatile double fps = 0.0;
