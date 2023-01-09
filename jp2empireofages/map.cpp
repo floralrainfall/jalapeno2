@@ -66,8 +66,8 @@ void EoA::MapNode::GenerateMapData()
             float fx = (float)i;
             float fy = (float)j;
             perlin_noise_seed = seed;
-            //d.height = perlin2d(fx/MAP_WIDTH,fy/MAP_HEIGHT,4,4)-0.5f;
-            d.height = std::atan2(-MAP_WIDTH/2.f+fy,-MAP_HEIGHT/2.f+fx);
+            d.height = perlin2d(fx/MAP_WIDTH,fy/MAP_HEIGHT,4,4)-0.5f;
+            //d.height = std::atan2(-MAP_WIDTH/2.f+fy,-MAP_HEIGHT/2.f+fx);
             perlin_noise_seed++;
             d.noise2 = perlin2d(fx/MAP_WIDTH/2.f,fy/MAP_HEIGHT/2.f,4,4);
             perlin_noise_seed++;
